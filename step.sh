@@ -1,8 +1,7 @@
 #!/bin/bash
 
-echo "Running: ${ruby_script_url}"
-wget ${ruby_script_url}
-ruby ${ruby_script_url}
+echo "Running"
+ruby ../main.rb
 
 #
 # --- Export Environment Variables for other Steps:

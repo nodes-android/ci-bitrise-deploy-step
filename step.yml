@@ -22,13 +22,3 @@ deps:
   - name: git
   - name: wget
 run_if: ""
-inputs:
-  - ruby_script_url: Default Value - you can leave this empty if you want to
-    opts:
-      title: "Ruby Script URL"
-      summary: URL of remote Ruby script to fetch and run
-      description: |
-        URL of remote Ruby script to fetch and run
-      is_expand: true
-      is_required: true
-      value_options: []
