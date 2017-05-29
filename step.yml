@@ -1,7 +1,7 @@
 title: "Android CI Deploy"
-summary: Downloads and runs a remote ruby script
+summary: summary
 description: |-
-  Downloads and runs a remote ruby script
+  description
 website: https://github.com/nodes-android/ci-bitrise-deploy-step
 source_code_url: https://github.com/nodes-android/ci-bitrise-deploy-step
 support_url: https://github.com/nodes-android/ci-bitrise-deploy-step/issues
