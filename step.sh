@@ -1,6 +1,8 @@
 #!/bin/bash
 
-echo "This is the value specified for the input 'example_step_input': ${example_step_input}"
+echo "Running: ${ruby_script_url}"
+wget ${ruby_script_url}
+ruby ${ruby_script_url}
 
 #
 # --- Export Environment Variables for other Steps:

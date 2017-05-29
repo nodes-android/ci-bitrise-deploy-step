@@ -1,32 +1,19 @@
-title: "STEP TEMPLATE"
-summary: A short summary of the step. Don't make it too long ;)
+title: "Android CI Deploy"
+summary: Downloads and runs a remote ruby script
 description: |-
-  This is a Step template.
-  Contains everything what's required for a valid Stepman managed step.
-
-  A Step's description (and generally any `description` property)
-  can be a [Markdown](https://en.wikipedia.org/wiki/Markdown) formatted text.
-
-  To create your own Step:
-
-  1. Create a new repository on GitHub
-  2. Copy the files from this folder into your repository
-  3. That's all, you can use it on your own machine
-  4. Once you're happy with it you can share it with others.
-website: https://github.com/...
-source_code_url: https://github.com/...
-support_url: https://github.com/.../issues
+  Downloads and runs a remote ruby script
+website: https://github.com/nodes-android/ci-bitrise-deploy-step
+source_code_url: https://github.com/nodes-android/ci-bitrise-deploy-step
+support_url: https://github.com/nodes-android/ci-bitrise-deploy-step/issues
 host_os_tags:
   - osx-10.10
 project_type_tags:
-  - ios
   - android
-  - xamarin
 type_tags:
   - script
-is_requires_admin_user: true
+is_requires_admin_user: false
 is_always_run: false
-is_skippable: false
+is_skippable: true
 deps:
   brew:
   - name: git
@@ -36,23 +23,12 @@ deps:
   - name: wget
 run_if: ""
 inputs:
-  - example_step_input: Default Value - you can leave this empty if you want to
+  - ruby_script_url: Default Value - you can leave this empty if you want to
     opts:
-      title: "Example Step Input"
-      summary: Summary. No more than 2-3 sentences.
+      title: "Ruby Script URL"
+      summary: URL of remote Ruby script to fetch and run
       description: |
-        Description of this input.
-
-        Can be Markdown formatted text.
+        URL of remote Ruby script to fetch and run
       is_expand: true
       is_required: true
       value_options: []
-outputs:
-  - EXAMPLE_STEP_OUTPUT:
-    opts:
-      title: "Example Step Output"
-      summary: Summary. No more than 2-3 sentences.
-      description: |
-        Description of this output.
-
-        Can be Markdown formatted text.
