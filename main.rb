@@ -32,6 +32,10 @@ ENV['HOCKEYBUILDSJSON'] = '
 ]
 '
 
+def deployBuild(build)
+	puts "Deploying apk #{build['build']}"
+	uploadBuild(build)
+end
 
 json = ENV['HOCKEYBUILDSJSON']
 buildInfo = JSON.parse(json)

@@ -9,5 +9,5 @@ def postMsg(channel, msg)
 		"text" => msg, 
 		"username" => 'android-ci'
     }
-    runCurl(data, $slackWebHookUrl)
+    runCurlJson(data, $slackWebHookUrl)
 end
