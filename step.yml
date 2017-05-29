@@ -18,7 +18,9 @@ deps:
   brew:
   - name: git
   - name: wget
+  - name: ruby
   apt_get:
   - name: git
   - name: wget
+  - name: ruby
 run_if: ""

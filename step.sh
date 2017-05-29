@@ -1,27 +1,9 @@
 #!/bin/bash
 
-echo "Running"
-
 set -ex
 THIS_SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-
-#echo "THIS_SCRIPT_DIR = ${THIS_SCRIPT_DIR}"
-
-#ls "${THIS_SCRIPT_DIR}"
-
-#tmp_gopath_dir="$(mktemp -d)"
-
-#go_package_name="github.com/bitrise-steplib/steps-hockeyapp-android-deploy"
-#full_package_path="${tmp_gopath_dir}/src/${go_package_name}"
-#mkdir -p "${full_package_path}"
-
-#rsync -avh --quiet "${THIS_SCRIPT_DIR}/" "${full_package_path}/"
-
-#export GOPATH="${tmp_gopath_dir}"
-#go run "${full_package_path}/main.go"
-
 ruby "${THIS_SCRIPT_DIR}/main.rb"
-pwd
+#pwd
 
 #
 # --- Export Environment Variables for other Steps:
