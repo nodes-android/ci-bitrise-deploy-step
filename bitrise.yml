@@ -19,7 +19,7 @@ workflows:
         run_if: true
         inputs:
         - PROJECT_SLACK_CHANNEL: "@stpe"
-
+        - ERROR_SLACK_CHANNEL: "@stpe"
 
   # ----------------------------------------------------------------
   # --- workflows to Share this step into a Step Library

@@ -26,3 +26,4 @@ deps:
 run_if: ""
 inputs:
   - PROJECT_SLACK_CHANNEL: "#bitrise"
+  - ERROR_SLACK_CHANNEL: "#bitrise"

@@ -19,11 +19,9 @@ def getProjectChannelName()
 	end
 end
 
-def getCommitterChannelName()
-	mail = getCommitterMail()
-	if(mail)
-		user = mail.split("@")
-		return '@' + user[0]
+def getErrorChannelName()
+	if(ENV['ERROR_SLACK_CHANNEL'])
+		return ENV['ERROR_SLACK_CHANNEL']
 	else
 		return '#bitrise'
 	end
@@ -95,7 +93,7 @@ def reportErrorSlack(msg)
 	title = "Error deploying " + getProjectName() + " (branch: " + getCurrentBranchName() + ")"
 	puts "title = #{title}"
 	data = { 
-		"channel" => getCommitterChannelName(),
+		"channel" => getErrorChannelName(),
 		"username" => 'bitrise-ci',
 		"mrkdwn" => true,
 		"attachments" => [{
