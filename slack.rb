@@ -38,6 +38,16 @@ def postMsg(channel, msg)
     runCurlJson(data, $slackWebHookUrl)
 end
 
+# do checking to determine if we should even attempt to post the builds
+def shouldAbortBuildsPostEntirely(builds)
+	builds.each do |build|
+		if(build['latestHockeyVersion'] && !build['error'])
+			return false
+		end
+  	end
+  	return true
+end
+
 def postBuildsSlack(builds)
 	comment = getCommitComment()
 	text = ""
@@ -46,11 +56,15 @@ def postBuildsSlack(builds)
 	end
 
 	builds.each do |build|
-		if(build['latestHockeyVersion']['status'] != 2)
-			reportError("Could not post build " + build['latestHockeyVersion']['title'] + ", go to <" + build['latestHockeyVersion']['config_url'] + "|HockeyApp> and set download page to Public")
+		if build['error']
+			parts = build['build'].split("/")
+			apk = parts[-1]
+			text += "\nApk #{apk} (Hockey id: #{build['hockeyId']}) could not be deployed due to errors" 
 			next
 		end
-		text += "\n<" + build['latestHockeyVersion']['download_url'] + "|" + build['latestHockeyVersion']['title'] + " v#{build['latestHockeyVersion']['shortversion']} (#{build['latestHockeyVersion']['version']})" +  ">"
+		if(build['latestHockeyVersion'] && !build['error']) 
+			text += "\n<" + build['latestHockeyVersion']['download_url'] + "|" + build['latestHockeyVersion']['title'] + " v#{build['latestHockeyVersion']['shortversion']} (#{build['latestHockeyVersion']['version']})" +  ">"
+		end
   	end
 
 	#text += "\nNew " + type + " build (v " + version + ", branch: " + getCurrentBranchName() + ") deployed, download from <" + hockey_link + "|HockeyApp>";
@@ -74,7 +88,7 @@ def postBuildsSlack(builds)
     }
     #puts "data = #{data}"
     result = runCurlJson(data, $slackWebHookUrl)
-    puts "result = #{result}"
+    #puts "result = #{result}"
 end
 
 def reportErrorSlack(msg)
