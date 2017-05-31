@@ -4,7 +4,7 @@ require_relative 'slack'
 require_relative 'git'
 puts 'Android CI Deploy'
 
-ENV['HOCKEYBUILDSJSON'] = '
+ENV['HOCKEYBUILDSJSONFF'] = '
 [
 	{
 		"build": "/Users/bison/ci/ci-test-android/app/build/outputs/apk/app-firstSkin-release-unsigned.apk",
