@@ -24,3 +24,5 @@ deps:
   - name: wget
   - name: ruby
 run_if: ""
+inputs:
+  - PROJECT_SLACK_CHANNEL: "#bitrise"

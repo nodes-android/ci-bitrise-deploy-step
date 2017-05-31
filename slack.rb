@@ -1,7 +1,33 @@
 require 'json'
 require_relative 'util'
+require_relative 'git'
+require_relative 'slack'
 
 $slackWebHookUrl = "https://hooks.slack.com/services/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"
+$slackErrorColor = "#e03131"
+$slackBuildColor = "#BADA55"
+
+def formatCodeString(code)
+	return '```' + code + '```'
+end
+
+def getProjectChannelName()
+	if(ENV['PROJECT_SLACK_CHANNEL'])
+		return ENV['PROJECT_SLACK_CHANNEL']
+	else
+		return '#bitrise'
+	end
+end
+
+def getCommitterChannelName()
+	mail = getCommitterMail()
+	if(mail)
+		user = mail.split("@")
+		return '@' + user[0]
+	else
+		return '#bitrise'
+	end
+end
 
 def postMsg(channel, msg)
 	data = { 
@@ -11,3 +37,79 @@ def postMsg(channel, msg)
     }
     runCurlJson(data, $slackWebHookUrl)
 end
+
+def postBuildsSlack(builds)
+	comment = getCommitComment()
+	text = ""
+	if(comment.length > 0)
+		text = formatCodeString(comment)
+	end
+
+	builds.each do |build|
+		if(build['latestHockeyVersion']['status'] != 2)
+			reportError("Could not post build " + build['latestHockeyVersion']['title'] + ", go to <" + build['latestHockeyVersion']['config_url'] + "|HockeyApp> and set download page to Public")
+			next
+		end
+		text += "\n<" + build['latestHockeyVersion']['download_url'] + "|" + build['latestHockeyVersion']['title'] + " v#{build['latestHockeyVersion']['shortversion']} (#{build['latestHockeyVersion']['version']})" +  ">"
+  	end
+
+	#text += "\nNew " + type + " build (v " + version + ", branch: " + getCurrentBranchName() + ") deployed, download from <" + hockey_link + "|HockeyApp>";
+	title = "#{getProjectName()} (branch: #{getCurrentBranchName()}) builds deployed:"
+	fallback = "#{getCommitterName} deployed new build(s) of #{getProjectName()}"
+	
+	data = { 
+		"channel" => getProjectChannelName(),
+		"username" => 'bitrise-ci',
+		"mrkdwn" => true,
+		"attachments" => [{
+			"fallback" => fallback,
+			"title" => title,
+			"title_link" => getGithubPageUrl(),
+			"text" => text,
+			"author_name" => "#{getCommitterName} (#{getCommitterMail})",
+			"color" => $slackBuildColor,
+			"footer" => "Bitrise CI " + $version + ", report bugs and feature requests on the <https://trello.com/b/7Blqe5gH/bitrise-ci|Trello board>",
+			"mrkdwn_in" => ["text"]
+		}]
+    }
+    #puts "data = #{data}"
+    result = runCurlJson(data, $slackWebHookUrl)
+    puts "result = #{result}"
+end
+
+def reportErrorSlack(msg)
+	title = "Error deploying " + getProjectName() + " (branch: " + getCurrentBranchName() + ")"
+	puts "title = #{title}"
+	data = { 
+		"channel" => getCommitterChannelName(),
+		"username" => 'bitrise-ci',
+		"mrkdwn" => true,
+		"attachments" => [{
+			"fallback" => msg,
+			"title" => title,
+			"title_link" => getGithubPageUrl(),
+			"text" => msg,
+			"color" => $slackErrorColor,
+			"footer" => "Bitrise CI " + $version + ", report bugs and feature requests on the <https://trello.com/b/7Blqe5gH/bitrise-ci|Trello board>",
+			"mrkdwn_in" => ["text"]
+		}]
+    }
+    #puts "data = #{data}"
+    result = runCurlJson(data, $slackWebHookUrl)
+    puts "result = #{result}"
+end
+
+def reportError(msg, detail = nil)
+	
+	if(detail)
+		puts "Error: #{msg}\n#{detail}"
+	else
+		puts "Error: #{msg}"
+	end
+
+	if(detail)
+		msg += "\n#{detail}"
+	end
+	reportErrorSlack msg
+end
+
