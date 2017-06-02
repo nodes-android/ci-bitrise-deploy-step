@@ -9,7 +9,7 @@ $hockeyToken = ENV['HOCKEY_TOKEN']
 $slackWebHookUrl = ENV['SLACK_WEBHOOK_URL']
 
 # for testing purposes, when running bitrise run test remove the final festival (FF) at the end
-ENV['HOCKEYBUILDSJSONFF'] = '
+ENV['HOCKEYBUILDSJSON'] = '
 [
 	{
 		"build": "/Users/bison/ci/ci-test-android/app/build/outputs/apk/app-firstSkin-release-unsigned.apk",
