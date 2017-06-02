@@ -4,7 +4,8 @@ default_step_lib_source: https://github.com/bitrise-io/bitrise-steplib.git
 app:
   envs:
   # define these in your .bitrise.secrets.yml
-  - A_SECRET_PARAM: $A_SECRET_PARAM
+  - HOCKEY_TOKEN: $HOCKEY_TOKEN
+  - SLACK_WEBHOOK_URL: $SLACK_WEBHOOK_URL
 
 workflows:
   test:

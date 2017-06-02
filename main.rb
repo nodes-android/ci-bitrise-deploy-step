@@ -4,6 +4,11 @@ require_relative 'slack'
 require_relative 'git'
 puts 'Android CI Deploy'
 
+# define these in .bitrise.secrets.yml
+$hockeyToken = ENV['HOCKEY_TOKEN']
+$slackWebHookUrl = ENV['SLACK_WEBHOOK_URL']
+
+# for testing purposes, when running bitrise run test remove the final festival (FF) at the end
 ENV['HOCKEYBUILDSJSONFF'] = '
 [
 	{

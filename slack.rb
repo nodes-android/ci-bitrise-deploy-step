@@ -3,7 +3,6 @@ require_relative 'util'
 require_relative 'git'
 require_relative 'slack'
 
-$slackWebHookUrl = "https://hooks.slack.com/services/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"
 $slackErrorColor = "#e03131"
 $slackBuildColor = "#BADA55"
 

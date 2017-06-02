@@ -1,8 +1,6 @@
 require 'shellwords'
 require_relative 'util'
 require_relative 'git'
-$hockeyToken = "7998516508134a98b971850f0b244286"
-#$hockeyToken = "7998516508134a98b971850f0b2442"
 
 def escapeNotes(notes)
 	result = Shellwords.escape(notes)
