@@ -6,7 +6,7 @@ app:
   # define these in your .bitrise.secrets.yml
   - HOCKEY_TOKEN: $HOCKEY_TOKEN
   - SLACK_WEBHOOK_URL: $SLACK_WEBHOOK_URL
-  - RELEASE_VERSION: 1.0.0
+  - RELEASE_VERSION: 1.0.1
 
 workflows:
   test:
