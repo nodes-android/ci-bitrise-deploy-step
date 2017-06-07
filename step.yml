@@ -1,7 +1,9 @@
-title: "Android CI Deploy"
-summary: summary
+title: "Hockey CI Deploy"
+summary: "Step for deploying one or more builds to hockey"
 description: |-
-  description
+  Deploys any build artifacts and uploads to Hockey. 
+  Accepts a json structure with hockey id, app id and a file path to the build.
+  Read more on the github page.
 website: https://github.com/nodes-android/ci-bitrise-deploy-step
 source_code_url: https://github.com/nodes-android/ci-bitrise-deploy-step
 support_url: https://github.com/nodes-android/ci-bitrise-deploy-step/issues
@@ -9,10 +11,11 @@ host_os_tags:
   - osx-10.10
 project_type_tags:
   - android
+  - ios
 type_tags:
   - script
 is_requires_admin_user: false
-is_always_run: false
+is_always_run: falses
 is_skippable: true
 deps:
   brew:
