@@ -11,7 +11,7 @@ workflows:
   test:
     steps:
     - path::./:
-        title: Android CI Deploy Test
+        title: Hockey CI Deploy Test
         description: |-
           The example input has a default value,
           you can overwrite it if you want to, just like we did below,
@@ -21,6 +21,7 @@ workflows:
         inputs:
         - PROJECT_SLACK_CHANNEL: "@joso"
         - ERROR_SLACK_CHANNEL: "@joso"
+        - HOCKEYBUILDSJSON: '[{"build": "app-firstSkin-release-unsigned.apk","hockeyId": "9aad7c10facc4f569dd6deec2e37a795","appId": "dk.nodes.citestflavors.firstskin","mappingFile": "null"},{"build": "app-secondSkin-release-unsigned.apk","hockeyId": "0c7b2da8e5354a26b8d6d4406c387c6f","appId": "dk.nodes.citestflavors.secondskin","mappingFile": "null"}]'
 
   # ----------------------------------------------------------------
   # --- workflows to Share this step into a Step Library

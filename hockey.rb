@@ -31,7 +31,7 @@ def getAppInfoHockey(build)
 	curl = 'curl -sS \
 			           -H "X-HockeyAppToken: ' + $hockeyToken + '" ' + url;
 	result = `#{curl}`
-	
+
 	if(!validJson?(result))
 		return nil
 	end

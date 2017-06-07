@@ -8,24 +8,6 @@ puts 'Android CI Deploy'
 $hockeyToken = ENV['HOCKEY_TOKEN']
 $slackWebHookUrl = ENV['SLACK_WEBHOOK_URL']
 
-# for testing purposes, when running bitrise run test remove the final festival (FF) at the end
-ENV['HOCKEYBUILDSJSON'] = '
-[
-	{
-		"build": "/Users/bison/ci/ci-test-android/app/build/outputs/apk/app-firstSkin-release-unsigned.apk",
-		"hockeyId": "9aad7c10facc4f569dd6deec2e37a795",
-		"appId": "dk.nodes.citestflavors.firstskin",
-		"mappingFile": "null"
-	},
-	{
-		"build": "/Users/bison/ci/ci-test-android/app/build/outputs/apk/app-secondSkin-release-unsigned.apk",
-		"hockeyId": "0c7b2da8e5354a26b8d6d4406c387c6f",
-		"appId": "dk.nodes.citestflavors.secondskin",
-		"mappingFile": "null"
-	}
-]
-'
-
 
 def initBuilds(builds)
 	builds.each do |build|
@@ -58,6 +40,9 @@ $version = "1.0"
 
 puts "Parsing build info"
 # retrieve build info json from env variable
+puts ENV['HOCKEYBUILDSJSON']
+puts ENV['PROJECT_SLACK_CHANNEL']
+
 json = ENV['HOCKEYBUILDSJSON']
 if json == nil
 	reportError("Build info could not be parsed from HOCKEYBUILDSJSON env var (empty)")
