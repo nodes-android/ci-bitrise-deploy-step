@@ -1,4 +1,4 @@
-title: "Hockey CI Deploy"
+title: "Hockey CI Multi Deploy"
 summary: "Step for deploying one or more builds to hockey"
 description: |-
   Deploys any build artifacts and uploads to Hockey. 
