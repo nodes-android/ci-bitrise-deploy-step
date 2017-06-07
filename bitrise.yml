@@ -19,8 +19,8 @@ workflows:
           file if you would not specify another value.
         run_if: true
         inputs:
-        - PROJECT_SLACK_CHANNEL: "@stpe"
-        - ERROR_SLACK_CHANNEL: "@stpe"
+        - PROJECT_SLACK_CHANNEL: "@joso"
+        - ERROR_SLACK_CHANNEL: "@joso"
 
   # ----------------------------------------------------------------
   # --- workflows to Share this step into a Step Library
