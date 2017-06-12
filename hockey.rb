@@ -90,11 +90,12 @@ def uploadBuildsHockey(builds)
 		if build['error']
 			next
 		end
-		if !build['latestHockeyVersion']
-			reportError "Build #{build['build']} hockeyapp id #{build['hockeyId']} no latest hockey version found, skipping.\nCheck hockeyIds in gradle.build"
-			build['error'] = true
-			next
-		end
+		# Is this actually what we want?
+		#if !build['latestHockeyVersion']
+		#	reportError "Build #{build['build']} hockeyapp id #{build['hockeyId']} no latest hockey version found, skipping.\nCheck hockeyIds in gradle.build"
+		#	build['error'] = true
+		#	next
+		#end
   		result = uploadBuildHockey build
   		if(!wasCurlOk(result))
   			reportError("Uploading build #{build['build']} to hockey app id #{build['hockeyId']} failed with code #{result}")
