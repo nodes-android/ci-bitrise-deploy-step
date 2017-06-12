@@ -61,6 +61,8 @@ if builds == nil
 	exit 1
 end
 
+puts "[34;1mBuild info (size: #{builds.length}):[0m #{json}"
+
 initBuilds builds
 
 puts "Downloading info about latest app versions from hockeyapp..."
