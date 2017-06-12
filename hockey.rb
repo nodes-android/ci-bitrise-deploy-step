@@ -21,6 +21,8 @@ def setAppVisibilityPublicHockey(build)
 	if(data['status'])
 		if(data['status'] == "success")
 			return true
+		else
+			puts "setAppVisibilityPublicHockey error: ${data['message']}"
 		end
 	end
 	return false
@@ -39,6 +41,8 @@ def getAppInfoHockey(build)
 	if(data['status'])
 		if(data['status'] == "success")
 			return data['app']
+		else
+			puts "getAppInfoHockey error: ${data['message']}"
 		end
 	end
 	return nil
@@ -137,7 +141,7 @@ end
 def fetchAndAddHockeyInfoToBuild(build)
 	app = getAppInfoHockey(build)
 	if app == nil
-		reportError "Error attempting to fetch info about hockeyapp #{build['hockeyId']}, is it marked as private?"
+		reportError "Error attempting to fetch info about hockeyapp #{build['hockeyId']}. Please check if the app is marked as private or created on your own HockeyApp account."
 		return false
 	end
 	latest = getLatestAppVersionHockey(build['hockeyId'])
