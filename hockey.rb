@@ -119,22 +119,26 @@ end
 
 def getLatestAppVersionHockey(appId)
 	versions = getAppVersionsHockey(appId)
+	puts "getLatestAppVersionHockey for appId #{appId} --> #{versions}"
+	success = versions["status"] == "success"
 	if(versions == nil)
-		return nil
+		return success, nil
 	end
 	if(versions && versions.key?("app_versions"))
 		versions = versions["app_versions"]
 	else
-		return nil
+		puts "getLatestAppVersionHockey -> could not find key app_versions in response #{versions}"
+		return success, nil
 	end
 	if(versions)
-		#puts "hockey versions #{versions}"
+		puts "getLatestAppVersionHockey -> hockey versions #{versions}"
 		versions.each do |version|	
   			version['img_url'] = "https://rink.hockeyapp.net/api/2/apps/" + appId + "?format=png";
 		end
-		return versions[0]
+		return success, versions[0]
 	else
-		return nil
+		puts "getLatestAppVersionHockey -> versions was empty or nil"
+		return success, nil
 	end
 end
 
@@ -144,12 +148,13 @@ def fetchAndAddHockeyInfoToBuild(build)
 		reportError "Error attempting to fetch info about hockeyapp #{build['hockeyId']}. Please check if the app is marked as private or created on your own HockeyApp account."
 		return false
 	end
-	latest = getLatestAppVersionHockey(build['hockeyId'])
-	if latest == nil
+	success, latest = getLatestAppVersionHockey(build['hockeyId'])
+	if latest == nil && !success
 		reportError "Error attempting to fetch latest hockeyapp version (#{build['hockeyId']})"
 		return false
+	else
+		build['latestHockeyVersion'] = latest	
 	end
-	build['latestHockeyVersion'] = latest
 	build['hockeyInfo'] = app
 	#puts build.inspect.gsub(",", "\n")
 	return true
