@@ -2,7 +2,7 @@ require 'json'
 require_relative 'hockey'
 require_relative 'slack'
 require_relative 'git'
-puts 'Android CI Deploy'
+puts 'Nodes CI Deploy'
 
 # define these in .bitrise.secrets.yml
 $hockeyToken = ENV['HOCKEY_TOKEN']
@@ -41,10 +41,11 @@ $version = "1.0"
 puts "Parsing build info"
 # retrieve build info json from env variable
 json = ENV['HOCKEYBUILDSJSON']
+buildPath = ENV['BITRISE_SOURCE_DIR']
 
 if json == nil || json.to_s.empty?
-	puts "Env var: HOCKEYBUILDSJSON was empty, trying to read from file: hockeybuilds.json"
-	json File.read("./hockeybuilds.json")
+	puts "Env var: HOCKEYBUILDSJSON was empty, trying to read from file: #{buildPath}/hockeybuilds.json"
+	json = File.read("#{buildPath}/hockeybuilds.json")
 end
 if json == nil || json.to_s.empty?
 	reportError("Build info could not be parsed from json (empty)")
