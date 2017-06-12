@@ -18,7 +18,7 @@ end
 def sanityCheckBuilds(builds)
 	builds.each do |build|
 		# skip builds with error or no hockeyinfo
-  		if !build['error'] && build['latestHockeyVersion'] == nil && build['hockeyInfo']
+  		if build['error'] || (build['latestHockeyVersion'] == nil && build['hockeyInfo'])
 			next
 		end
 		if(build['latestHockeyVersion'] && !build['error']) 
