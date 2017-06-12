@@ -23,7 +23,8 @@ end
 def validJson?(string)
 	begin
 		!!JSON.parse(string)
-	rescue JSON::ParserError
+	rescue JSON::ParserError => e
+		puts "JSON failed parsing: #{e}"
 		false
 	end
 end
