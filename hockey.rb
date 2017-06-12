@@ -137,7 +137,7 @@ end
 def fetchAndAddHockeyInfoToBuild(build)
 	app = getAppInfoHockey(build)
 	if app == nil
-		reportError "Error attempting to fetch info about hockeyapp #{build['hockeyId']}"
+		reportError "Error attempting to fetch info about hockeyapp #{build['hockeyId']}, is it marked as private?"
 		return false
 	end
 	latest = getLatestAppVersionHockey(build['hockeyId'])
