@@ -40,16 +40,13 @@ $version = "1.0"
 
 puts "Parsing build info"
 # retrieve build info json from env variable
-puts ENV['HOCKEYBUILDSJSON']
-puts ENV['PROJECT_SLACK_CHANNEL']
-
 json = ENV['HOCKEYBUILDSJSON']
 
-if json == nil
+if json == nil || json.to_s.empty?
 	puts "Env var: HOCKEYBUILDSJSON was empty, trying to read from file: hockeybuilds.json"
 	json File.read("./hockeybuilds.json")
 end
-if json == nil
+if json == nil || json.to_s.empty?
 	reportError("Build info could not be parsed from json (empty)")
 	exit 1
 end
