@@ -44,17 +44,22 @@ puts ENV['HOCKEYBUILDSJSON']
 puts ENV['PROJECT_SLACK_CHANNEL']
 
 json = ENV['HOCKEYBUILDSJSON']
+
 if json == nil
-	reportError("Build info could not be parsed from HOCKEYBUILDSJSON env var (empty)")
+	puts "Env var: HOCKEYBUILDSJSON was empty, trying to read from file: hockeybuilds.json"
+	json File.read("./hockeybuilds.json")
+end
+if json == nil
+	reportError("Build info could not be parsed from json (empty)")
 	exit 1
 end
 if(!validJson?(json))
-	reportError("Build info could not be parsed from HOCKEYBUILDSJSON env var (parse failed)")
+	reportError("Build info could not be parsed from json (json not valid)")
 	exit 1
 end
 builds = JSON.parse(json)
 if builds == nil
-	reportError("Build info could not be parsed from HOCKEYBUILDSJSON env var (parse failed)")
+	reportError("Build info could not be parsed from json (parse failed)")
 	exit 1
 end
 
