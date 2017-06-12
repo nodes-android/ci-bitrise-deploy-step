@@ -21,6 +21,7 @@ def wasCurlOk(result)
 end
 
 def validJson?(string)
+	puts "Parsing: \n#{string}"
 	begin
 		!!JSON.parse(string)
 	rescue JSON::ParserError => e
