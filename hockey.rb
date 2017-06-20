@@ -51,9 +51,14 @@ end
 def uploadBuildHockey(build)
     url = "https://rink.hockeyapp.net/api/2/apps/#{build['hockeyId']}/app_versions/upload"
     notes = "notes="
+	changelog = $ENV['COMMIT_CHANGELOG']
 
     if build['latestHockeyVersion'] 
-    	notes += getCommitComment()
+		if changelog && changelog.length > 0
+			notes += changelog
+		else
+    		notes += getCommitComment()
+		end
 	end
 
 	#notes = Shellwords.escape("notes=line 1\nline 2\nline 3")
@@ -120,7 +125,7 @@ end
 
 def getLatestAppVersionHockey(appId)
 	versions = getAppVersionsHockey(appId)
-	puts "getLatestAppVersionHockey for appId #{appId} --> #{versions}"
+	#puts "getLatestAppVersionHockey for appId #{appId} --> #{versions}"
 	success = versions["status"] == "success"
 	if(versions == nil)
 		return success, nil
@@ -128,11 +133,11 @@ def getLatestAppVersionHockey(appId)
 	if(versions && versions.key?("app_versions"))
 		versions = versions["app_versions"]
 	else
-		puts "getLatestAppVersionHockey -> could not find key app_versions in response #{versions}"
+		#puts "getLatestAppVersionHockey -> could not find key app_versions in response #{versions}"
 		return success, nil
 	end
 	if(versions)
-		puts "getLatestAppVersionHockey -> hockey versions #{versions}"
+		#puts "getLatestAppVersionHockey -> hockey versions #{versions}"
 		versions.each do |version|	
   			version['img_url'] = "https://rink.hockeyapp.net/api/2/apps/" + appId + "?format=png";
 		end
