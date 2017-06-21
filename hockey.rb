@@ -51,7 +51,7 @@ end
 def uploadBuildHockey(build)
     url = "https://rink.hockeyapp.net/api/2/apps/#{build['hockeyId']}/app_versions/upload"
     notes = "notes="
-	changelog = $ENV['COMMIT_CHANGELOG']
+	changelog = ENV['COMMIT_CHANGELOG']
 
     if build['latestHockeyVersion'] 
 		if changelog && changelog.length > 0
