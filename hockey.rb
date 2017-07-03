@@ -128,16 +128,17 @@ def getLatestAppVersionHockey(appId)
 	#puts "getLatestAppVersionHockey for appId #{appId} --> #{versions}"
 	success = versions["status"] == "success"
 	if(versions == nil)
+		puts "getLatestAppVersionHockey -> no versions found"
 		return success, nil
 	end
 	if(versions && versions.key?("app_versions"))
 		versions = versions["app_versions"]
 	else
-		#puts "getLatestAppVersionHockey -> could not find key app_versions in response #{versions}"
+		puts "getLatestAppVersionHockey -> could not find key app_versions in response #{versions}"
 		return success, nil
 	end
 	if(versions)
-		#puts "getLatestAppVersionHockey -> hockey versions #{versions}"
+		puts "getLatestAppVersionHockey -> hockey versions #{versions}"
 		versions.each do |version|	
   			version['img_url'] = "https://rink.hockeyapp.net/api/2/apps/" + appId + "?format=png";
 		end
