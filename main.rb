@@ -22,7 +22,7 @@ def sanityCheckBuilds(builds)
 			next
 		end
 		if(build['latestHockeyVersion'] && !build['error']) 
-			if(build['latestHockeyVersion']['status'] != 2)
+			if(build['latestHockeyVersion']['status'] == 1)
 				reportError("Could not post build " + build['latestHockeyVersion']['title'] + ", go to <" + build['latestHockeyVersion']['config_url'] + "|HockeyApp> and set download page to Public")
 				build['error'] = true
 				next
@@ -37,6 +37,11 @@ def sanityCheckBuilds(builds)
 end
 
 $version = "1.0"
+
+if $hockeyToken == nil || $hockeyToken.empty?
+	puts "HOCKEY_TOKEN missing in Bitrise app secrets, please add it. Stopping."
+	exit 1
+end
 
 puts "Parsing build info"
 # retrieve build info json from env variable
