@@ -1,1 +1,5 @@
 .bitrise*
+
+.idea/*
+
+.DS_Store
