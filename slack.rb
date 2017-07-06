@@ -85,9 +85,9 @@ def postBuildsSlack(builds)
                             "mrkdwn_in" => ["text"]
                         }]
   }
-  puts "data = #{data}"
+  #puts "data = #{data}"
   result = runCurlJson(data, $slackUrl)
-  puts "result = #{result}"
+  #puts "result = #{result}"
 end
 
 def reportErrorSlack(msg)
@@ -109,7 +109,6 @@ def reportErrorSlack(msg)
   }
   #puts "data = #{data}"
   result = runCurlJson(data, $slackUrl)
-  puts "result = #{result}"
 end
 
 def reportError(msg, detail = nil)
