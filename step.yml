@@ -28,28 +28,3 @@ deps:
   - name: ruby
 run_if: true
 inputs:
-- PROJECT_SLACK_CHANNEL: "#bitrise"
-  opts:
-    title: Default channel for outputting succeeded build info, links etc
-- ERROR_SLACK_CHANNEL: "#bitrise"
-  opts:
-    title: Default channel for outputting step errors
-- HOCKEYBUILDSJSON: "" 
-  opts:
-    title: JSON String containing build info
-    description: |-
-      The build information format is:
-      ```
-      [
-        {
-          "build": "app-first.apk",
-          "hockeyId": "11111111111111111111111111111",
-          "appId": "dk.nodes.citestflavors.firstskin","mappingFile": "null"
-        },
-        {
-          "build": "app-second.apk",
-          "hockeyId": "11111111111111111111111111111",
-          "appId": "dk.nodes.citestflavors.secondskin","mappingFile": "null"
-        }
-      ]
-      ```
