@@ -11,7 +11,7 @@ def formatCodeString(code)
 end
 
 def getProjectChannelName()
-	if ! ENV['PROJECT_SLACK_CHANNEL'].to_s.blank?
+	if ! ENV['PROJECT_SLACK_CHANNEL'].blank?
 		return ENV['PROJECT_SLACK_CHANNEL'].to_s
 	else
 		return '#bitrise'
@@ -19,7 +19,7 @@ def getProjectChannelName()
 end
 
 def getErrorChannelName()
-	if ! ENV['ERROR_SLACK_CHANNEL'].to_s.blank?
+	if ! ENV['ERROR_SLACK_CHANNEL'].blank?
 		return ENV['ERROR_SLACK_CHANNEL'].to_s
 	else
 		return '#bitrise'
