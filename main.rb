@@ -5,12 +5,50 @@ require_relative 'git'
 
 puts 'Nodes CI Deploy'
 
+
+# for testing purposes, when running bitrise run test remove the final festival (FF) at the end
+=begin
+ENV['HOCKEYBUILDSJSON'] = '
+[
+  {
+    "build": "/Users/bison/ci/ci-test-android/app/build/outputs/apk/app-firstSkin-release-unsigned.apk",
+    "hockeyId": "9aad7c10facc4f569dd6deec2e37a795",
+    "appId": "dk.nodes.citestflavors.firstskin",
+    "mappingFile": "null"
+  },
+  {
+    "build": "/Users/bison/ci/ci-test-android/app/build/outputs/apk/app-secondSkin-release-unsigned.apk",
+    "hockeyId": "0c7b2da8e5354a26b8d6d4406c387c6f",
+    "appId": "dk.nodes.citestflavors.secondskin",
+    "mappingFile": "null"
+  }
+]
+
+ENV['HOCKEYBUILDSJSON'] = '
+[
+  {
+    "build": "/Users/bison/ci/ci-test-android/app/build/outputs/apk/app-firstSkin-release-unsigned.apk",
+    "hockeyId": "f03bcdd587154416a3ba84c447c7db32",
+    "appId": "dk.pwc.extravalue",
+    "mappingFile": "null"
+  },
+  {
+    "build": "/Users/bison/ci/ci-test-android/app/build/outputs/apk/app-secondSkin-release-unsigned.apk",
+    "hockeyId": "a346a09c01dd4b9aabfdd069d91f2547",
+    "appId": "dk.pwc.extravalue.staging",
+    "mappingFile": "null"
+  }
+]
+'
+'
+=end
+
+
 $hockeyToken = ENV['HOCKEY_TOKEN']
 $slackUrl = ENV['SLACK_WEBHOOK_URL']
 $errorSlackChannel = ENV['ERROR_SLACK_CHANNEL']
 $projectSlackChannel = ENV['PROJECT_SLACK_CHANNEL']
 $hockeyJsonBuilds = ENV['HOCKEYBUILDSJSON']
-
 
 puts "Hockey Token: #{$hockeyToken}"
 puts "Slack URL: #{$slackUrl}"
@@ -32,13 +70,16 @@ def sanityCheckBuilds(builds)
     if build['error'] || build['hockeyInfo'] == nil
       next
     end
-    if(build['latestHockeyVersion'] && !build['error'])
-      if(build['latestHockeyVersion']['status'] == 1)
-        reportError("Could not post build " + build['latestHockeyVersion']['title'] + ", go to <" + build['latestHockeyVersion']['config_url'] + "|HockeyApp> and set download page to Public")
-        build['error'] = true
-        next
-      end
+    #puts build['hockeyInfo'].inspect.gsub(",", "\n")
+    #puts build['latestHockeyVersion'].inspect.gsub(",", "\n")
+
+    if(build['hockeyInfo']['visibility'] == "private")
+      $url = "https://rink.hockeyapp.net/manage/apps/#{build['hockeyInfo']['id']}/settings?type=distribution"
+      reportError("Could not post build " + build['hockeyInfo']['title'] + ", go to <" + $url + "| Distribution Settings> and set download page to Public")
+      build['error'] = true
+      next
     end
+
     if(build['appId'] != build['hockeyInfo']['bundle_identifier'])
       reportError("appId #{build['appId']} from build.gradle is not the same as the hockey bundle identifier #{build['hockeyInfo']['bundle_identifier']}")
       build['error'] = true
@@ -87,6 +128,7 @@ addInfoToBuildsHockey builds
 #puts builds.inspect.gsub(",", "\n")
 sanityCheckBuilds(builds)
 
+
 puts "Uploading builds to hockeyapp..."
 #puts builds.inspect.gsub(",", "\n")
 uploadBuildsHockey(builds)
@@ -102,7 +144,6 @@ puts "Posting builds to slack"
 #end
 postBuildsSlack builds
 
-#postMsg("@stpe", "Hej Per! har du savnet mig?")
 
 #reportError("Error", "Av for helvede")
 
