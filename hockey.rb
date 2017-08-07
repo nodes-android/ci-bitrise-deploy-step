@@ -49,7 +49,12 @@ def getAppInfoHockey(build)
 end
 
 def uploadBuildHockey(build)
-    url = "https://rink.hockeyapp.net/api/2/apps/#{build['hockeyId']}/app_versions/upload"
+    url = ""
+    if(build['hockeyId']!=nil)
+        url = "https://rink.hockeyapp.net/api/2/apps/#{build['hockeyId']}/app_versions/upload"
+    else
+        url = "https://rink.hockeyapp.net/api/2/apps/upload"
+    
     notes = "notes="
 	changelog = ENV['COMMIT_CHANGELOG']
 
@@ -60,9 +65,8 @@ def uploadBuildHockey(build)
     		notes += getCommitComment()
 		end
 	end
-
 	#notes = Shellwords.escape("notes=line 1\nline 2\nline 3")
-
+    
     if build['mappingFile'] != "null"
 		curl = 'curl -sS \
 			           -F "status=2" \
