@@ -50,10 +50,13 @@ end
 
 def uploadBuildHockey(build)
     url = ""
-    if(build['hockeyId']!=nil)
-        url = "https://rink.hockeyapp.net/api/2/apps/#{build['hockeyId']}/app_versions/upload"
+    if build['hockeyId'] == nil
+        url =  "https://rink.hockeyapp.net/api/2/apps/upload"
     else
-        url = "https://rink.hockeyapp.net/api/2/apps/upload"
+        url = "https://rink.hockeyapp.net/api/2/apps/#{build['hockeyId']}/app_versions/upload"
+    end
+    
+    put url
     
     notes = "notes="
 	changelog = ENV['COMMIT_CHANGELOG']
