@@ -56,7 +56,7 @@ def uploadBuildHockey(build)
         url = "https://rink.hockeyapp.net/api/2/apps/#{build['hockeyId']}/app_versions/upload"
     end
     
-    put url
+    puts url
     
     notes = "notes="
 	changelog = ENV['COMMIT_CHANGELOG']
