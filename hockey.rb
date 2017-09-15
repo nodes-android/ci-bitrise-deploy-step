@@ -53,13 +53,17 @@ def uploadBuildHockey(build)
     notes = "notes="
 	changelog = ENV['COMMIT_CHANGELOG']
 
+	puts "uploadBuildHockey: " + changelog 
+
     if build['latestHockeyVersion'] 
-		if changelog && changelog.length > 0
+		if changelog != nil && !changelog.to_s.empty?
 			notes += changelog
 		else
     		notes += getCommitComment()
 		end
 	end
+
+	puts "uploadBuildHockey: " + notes
 
 	#notes = Shellwords.escape("notes=line 1\nline 2\nline 3")
 
