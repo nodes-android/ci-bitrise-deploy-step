@@ -5,6 +5,7 @@ require_relative 'git'
 def escapeNotes(notes)
 	result = Shellwords.escape(notes)
 	#result = notes
+	puts "escaped notes: " + result
 	return result
 end
 
