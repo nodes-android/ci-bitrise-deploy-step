@@ -33,6 +33,7 @@ def getGithubPageUrl()
 end
 
 def getCurrentBranchName()
-	result = `git rev-parse --abbrev-ref HEAD`
+	gitcommit = ENV['GIT_CLONE_COMMIT_HASH'];
+	result = `git rev-parse --abbrev-ref ${gitcommit}`
 	return result.strip()
 end

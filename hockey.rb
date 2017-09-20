@@ -84,7 +84,7 @@ def uploadBuildHockey(build)
 			           -F "notify=0" \
 			           -F "ipa=@' + build['build'] + '" \
 			           -F ' + escapeNotes(notes) + ' \
-			           -F "notes_type=0" \
+			           -F "notes_type=1" \
 			           -H "X-HockeyAppToken: ' + $hockeyToken + '" \
 			           -o /dev/null -w "%{http_code}" ' + url;
 	end
