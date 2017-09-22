@@ -53,8 +53,9 @@ def uploadBuildHockey(build)
     url = "https://rink.hockeyapp.net/api/2/apps/#{build['hockeyId']}/app_versions/upload"
     notes = "notes="
 	changelog = ENV['COMMIT_CHANGELOG']
-
-	puts "uploadBuildHockey: " + changelog 
+	if changelog != nil
+		puts "uploadBuildHockey: " + changelog
+	end
 
     if build['latestHockeyVersion'] 
 		if changelog != nil && !changelog.to_s.empty?
