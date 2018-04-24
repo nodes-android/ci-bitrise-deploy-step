@@ -8,41 +8,21 @@ puts 'Nodes CI Deploy'
 
 # for testing purposes, when running bitrise run test remove the final festival (FF) at the end
 =begin
-ENV['HOCKEYBUILDSJSON'] = '
-[
+ENV['HOCKEYBUILDSJSON'] = '[
   {
-    "build": "/Users/bison/ci/ci-test-android/app/build/outputs/apk/app-firstSkin-release-unsigned.apk",
+    "build": "app-firstSkin-release-unsigned.apk",
     "hockeyId": "9aad7c10facc4f569dd6deec2e37a795",
     "appId": "dk.nodes.citestflavors.firstskin",
     "mappingFile": "null"
   },
   {
-    "build": "/Users/bison/ci/ci-test-android/app/build/outputs/apk/app-secondSkin-release-unsigned.apk",
+    "build": "app-secondSkin-release-unsigned.apk",
     "hockeyId": "0c7b2da8e5354a26b8d6d4406c387c6f",
     "appId": "dk.nodes.citestflavors.secondskin",
     "mappingFile": "null"
   }
-]
-
-ENV['HOCKEYBUILDSJSON'] = '
-[
-  {
-    "build": "/Users/bison/ci/ci-test-android/app/build/outputs/apk/app-firstSkin-release-unsigned.apk",
-    "hockeyId": "f03bcdd587154416a3ba84c447c7db32",
-    "appId": "dk.pwc.extravalue",
-    "mappingFile": "null"
-  },
-  {
-    "build": "/Users/bison/ci/ci-test-android/app/build/outputs/apk/app-secondSkin-release-unsigned.apk",
-    "hockeyId": "a346a09c01dd4b9aabfdd069d91f2547",
-    "appId": "dk.pwc.extravalue.staging",
-    "mappingFile": "null"
-  }
-]
-'
-'
+]'
 =end
-
 
 $hockeyToken = ENV['HOCKEY_TOKEN']
 $slackUrl = ENV['SLACK_WEBHOOK_URL']

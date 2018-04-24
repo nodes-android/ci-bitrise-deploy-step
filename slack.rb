@@ -87,7 +87,6 @@ def postBuildsSlack(builds)
   attachments = []
   # Bitrise attachment
   attachments.push({
-
             "fallback" => "Tag *#{getBitriseTag()}* triggered on *#{getBitriseBranch()}*, started *#{getBitriseTimestamp()}* by #{getCommitterName} (#{getCommitterMail}).",
             "title" => "Bitrise status",
 			      "text" => "Tag *#{getBitriseTag()}* triggered on *#{getBitriseBranch()}*, started *#{getBitriseTimestamp()}* by #{getCommitterName} (#{getCommitterMail}).",
@@ -107,7 +106,6 @@ def postBuildsSlack(builds)
       parts = build['build'].split("/")
       apk = parts[-1]
       attachments.push({
-        {
             "fallback" => "Apk #{apk} (Hockey id: #{build['hockeyId']}) could not be deployed due to errors",
             "color" => "#F50057",
             "title" => "Apk #{apk} (Hockey id: #{build['hockeyId']}) could not be deployed due to errors",
@@ -119,25 +117,22 @@ def postBuildsSlack(builds)
                 "style" => "danger"
               }
             ]
-        }
-      })
+        })
       next
     end
     if (build['latestHockeyVersion'] && !build['error'])
       attachments.push({
-        {
-            "fallback" => "#{build['latestHockeyVersion']['download_url']} #{build['latestHockeyVersion']['title']} v#{build['latestHockeyVersion']['shortversion']} (#{build['latestHockeyVersion']['version']})",
+            "fallback" => "#{build['latestHockeyVersion']['title']} v#{build['latestHockeyVersion']['shortversion']} (#{build['latestHockeyVersion']['version']})",
             "color" => $slackBuildColor,
-            "title" => "#{build['latestHockeyVersion']['download_url']} #{build['latestHockeyVersion']['title']} v#{build['latestHockeyVersion']['shortversion']} (#{build['latestHockeyVersion']['version']})",
+            "title" => "#{build['latestHockeyVersion']['title']} v#{build['latestHockeyVersion']['shortversion']} (#{build['latestHockeyVersion']['version']})",
 			      "actions" => [
               {
                 "type" => "button",
                 "text" => "Install",
-                "url" => "https://rink.hockeyapp.net/manage/apps/#{build['hockeyId']}",
+                "url" => "#{build['latestHockeyVersion']['download_url']}",
                 "style" => "primary"
               }
             ]
-        }
       })
     end
   end
