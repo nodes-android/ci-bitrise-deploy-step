@@ -88,16 +88,16 @@ def postBuildsSlack(builds)
   # Bitrise attachment
   attachments.push({
 
-            "fallback": "Tag *#{getBitriseTag()}* triggered on *#{getBitriseBranch()}*, started *#{getBitriseTimestamp()}* by #{getCommitterName} (#{getCommitterMail}).",
-            "title": "Bitrise status",
-			      "text" : "Tag *#{getBitriseTag()}* triggered on *#{getBitriseBranch()}*, started *#{getBitriseTimestamp()}* by #{getCommitterName} (#{getCommitterMail}).",
-            "mrkdwn_in" : ["footer", "text"],
-            "actions": [
+            "fallback" => "Tag *#{getBitriseTag()}* triggered on *#{getBitriseBranch()}*, started *#{getBitriseTimestamp()}* by #{getCommitterName} (#{getCommitterMail}).",
+            "title" => "Bitrise status",
+			      "text" => "Tag *#{getBitriseTag()}* triggered on *#{getBitriseBranch()}*, started *#{getBitriseTimestamp()}* by #{getCommitterName} (#{getCommitterMail}).",
+            "mrkdwn_in" => ["footer", "text"],
+            "actions" => [
               {
-                "type": "button",
-                "text": "Build log",
-                "url": getBitriseBuildURL(),
-                "style": "primary"
+                "type" => "button",
+                "text" => "Build log",
+                "url" => getBitriseBuildURL(),
+                "style" => "primary"
               }
             ]
         })
@@ -108,15 +108,15 @@ def postBuildsSlack(builds)
       apk = parts[-1]
       attachments.push({
         {
-            "fallback": "Apk #{apk} (Hockey id: #{build['hockeyId']}) could not be deployed due to errors",
-            "color": "#F50057",
-            "title": "Apk #{apk} (Hockey id: #{build['hockeyId']}) could not be deployed due to errors",
-			      "actions": [
+            "fallback" => "Apk #{apk} (Hockey id: #{build['hockeyId']}) could not be deployed due to errors",
+            "color" => "#F50057",
+            "title" => "Apk #{apk} (Hockey id: #{build['hockeyId']}) could not be deployed due to errors",
+			      "actions" => [
               {
-                "type": "button",
-                "text": "Hockey page",
-                "url": "https://rink.hockeyapp.net/manage/apps/#{build['hockeyId']}",
-                "style": "danger"
+                "type" => "button",
+                "text" => "Hockey page",
+                "url" => "https://rink.hockeyapp.net/manage/apps/#{build['hockeyId']}",
+                "style" => "danger"
               }
             ]
         }
@@ -126,15 +126,15 @@ def postBuildsSlack(builds)
     if (build['latestHockeyVersion'] && !build['error'])
       attachments.push({
         {
-            "fallback": "#{build['latestHockeyVersion']['download_url']} #{build['latestHockeyVersion']['title']} v#{build['latestHockeyVersion']['shortversion']} (#{build['latestHockeyVersion']['version']})",
-            "color": $slackBuildColor,
-            "title": "#{build['latestHockeyVersion']['download_url']} #{build['latestHockeyVersion']['title']} v#{build['latestHockeyVersion']['shortversion']} (#{build['latestHockeyVersion']['version']})",
-			      "actions": [
+            "fallback" => "#{build['latestHockeyVersion']['download_url']} #{build['latestHockeyVersion']['title']} v#{build['latestHockeyVersion']['shortversion']} (#{build['latestHockeyVersion']['version']})",
+            "color" => $slackBuildColor,
+            "title" => "#{build['latestHockeyVersion']['download_url']} #{build['latestHockeyVersion']['title']} v#{build['latestHockeyVersion']['shortversion']} (#{build['latestHockeyVersion']['version']})",
+			      "actions" => [
               {
-                "type": "button",
-                "text": "Install",
-                "url": "https://rink.hockeyapp.net/manage/apps/#{build['hockeyId']}",
-                "style": "primary"
+                "type" => "button",
+                "text" => "Install",
+                "url" => "https://rink.hockeyapp.net/manage/apps/#{build['hockeyId']}",
+                "style" => "primary"
               }
             ]
         }
