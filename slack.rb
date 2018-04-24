@@ -87,7 +87,7 @@ def postBuildsSlack(builds)
   attachments = []
   # Bitrise attachment
   attachments.push({
-        {
+
             "fallback": "Tag *#{getBitriseTag()}* triggered on *#{getBitriseBranch()}*, started *#{getBitriseTimestamp()}* by #{getCommitterName} (#{getCommitterMail}).",
             "title": "Bitrise status",
 			      "text" : "Tag *#{getBitriseTag()}* triggered on *#{getBitriseBranch()}*, started *#{getBitriseTimestamp()}* by #{getCommitterName} (#{getCommitterMail}).",
@@ -100,8 +100,7 @@ def postBuildsSlack(builds)
                 "style": "primary"
               }
             ]
-        }
-      })
+        })
 
   builds.each do |build|
     if build['error']
@@ -110,7 +109,7 @@ def postBuildsSlack(builds)
       attachments.push({
         {
             "fallback": "Apk #{apk} (Hockey id: #{build['hockeyId']}) could not be deployed due to errors",
-            "color": "#F50057"
+            "color": "#F50057",
             "title": "Apk #{apk} (Hockey id: #{build['hockeyId']}) could not be deployed due to errors",
 			      "actions": [
               {
@@ -128,7 +127,7 @@ def postBuildsSlack(builds)
       attachments.push({
         {
             "fallback": "#{build['latestHockeyVersion']['download_url']} #{build['latestHockeyVersion']['title']} v#{build['latestHockeyVersion']['shortversion']} (#{build['latestHockeyVersion']['version']})",
-            "color": $slackBuildColor
+            "color": $slackBuildColor,
             "title": "#{build['latestHockeyVersion']['download_url']} #{build['latestHockeyVersion']['title']} v#{build['latestHockeyVersion']['shortversion']} (#{build['latestHockeyVersion']['version']})",
 			      "actions": [
               {
