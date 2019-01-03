@@ -43,7 +43,7 @@ def getAppInfoHockey(build)
 		if(data['status'] == "success")
 			return data['app']
 		else
-			puts "getAppInfoHockey error: ${data['message']}"
+			puts "getAppInfoHockey error: " + data
 		end
 	end
 	return nil
