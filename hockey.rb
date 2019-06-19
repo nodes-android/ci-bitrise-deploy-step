@@ -185,3 +185,51 @@ def addInfoToBuildsHockey(builds)
   	end
 end
 
+def uploadAppCenterBuild(build)
+	url = "https://api.appcenter.ms/v0.1/apps/#{build['ownerName']}/#{build['appName']}/release_uploads"
+	curl = 'curl -sS \
+			           -H "X-API-Token: ' + $appCenterToken + '" ' + url;
+	result = `#{curl}`
+
+	if(!validJson?(result))
+		return nil
+	end
+	data = JSON.parse(result)
+	if(data['status'])
+		if(data['status'] == "success")
+			return data['app']
+		else
+			puts "getAppInfoHockey error: ${data['message']}"
+		end
+	end
+	return nil
+end
+
+def getLatestBuildReleaseId(build)
+
+	#url = "https://api.appcenter.ms/v0.1/apps/#{build['ownerName']}/#{build['appName']}/releases"
+	url = "https://api.appcenter.ms/v0.1/apps/Casper-Rasmussen-Organization/Roast-Staging/releases"
+	curl = 'curl -sS \
+			           -H "X-API-Token: ' + $appCenterToken + '" ' + url
+	result = `#{curl}`
+
+	unless validJson?(result)
+		nil
+	end
+
+	data = JSON.parse(result)
+
+	put "Json data from build releases #{data}"
+
+	release_id = data[0]['id']
+
+	unless release_id.is_a? Integer
+		nil
+	end
+
+	put "Current build id #{release_id}"
+	put "Build id #{release_id + 1}"
+
+	release_id + 1
+
+end

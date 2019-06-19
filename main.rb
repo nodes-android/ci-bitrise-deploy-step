@@ -100,29 +100,34 @@ end
 
 puts "[34;1mBuild info (size: #{builds.length}):[0m #{json}"
 
-initBuilds builds
 
-puts "Downloading info about latest app versions from hockeyapp..."
-# lookup each build on hockey and add info it build exists
-addInfoToBuildsHockey builds
-#puts builds.inspect.gsub(",", "\n")
-sanityCheckBuilds(builds)
+builds.each(&method(:getLatestBuildReleaseId))
 
 
-puts "Uploading builds to hockeyapp..."
-#puts builds.inspect.gsub(",", "\n")
-uploadBuildsHockey(builds)
 
-puts "Downloading info about latest app versions from hockeyapp..."
-# get hockey info about the just uploaded builds
-addInfoToBuildsHockey builds
-
-puts "Posting builds to slack"
-#if shouldAbortBuildsPostEntirely(builds)
-#	reportError("No builds to post due to previous errors")
-#	exit(1)
-#end
-postBuildsSlack builds
+# initBuilds builds
+#
+# puts "Downloading info about latest app versions from hockeyapp..."
+# # lookup each build on hockey and add info it build exists
+# addInfoToBuildsHockey builds
+# #puts builds.inspect.gsub(",", "\n")
+# sanityCheckBuilds(builds)
+#
+#
+# puts "Uploading builds to hockeyapp..."
+# #puts builds.inspect.gsub(",", "\n")
+# uploadBuildsHockey(builds)
+#
+# puts "Downloading info about latest app versions from hockeyapp..."
+# # get hockey info about the just uploaded builds
+# addInfoToBuildsHockey builds
+#
+# puts "Posting builds to slack"
+# #if shouldAbortBuildsPostEntirely(builds)
+# #	reportError("No builds to post due to previous errors")
+# #	exit(1)
+# #end
+# postBuildsSlack builds
 
 
 #reportError("Error", "Av for helvede")
