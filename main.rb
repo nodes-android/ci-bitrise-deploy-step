@@ -70,8 +70,8 @@ end
 
 $version = "1.0"
 
-if $appCenterToken.nil? || $appCenterToken.empty?
-  puts 'APP_CENTER_TOKEN missing in Bitrise app secrets, please add it. Stopping.'
+if $appCenterToken == nil || $appCenterToken.empty?
+  puts "APP_CENTER_TOKEN missing in Bitrise app secrets, please add it. Stopping."
   exit 1
 end
 
