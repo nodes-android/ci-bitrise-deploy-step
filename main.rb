@@ -25,6 +25,7 @@ ENV['HOCKEYBUILDSJSON'] = '[
 =end
 
 $hockeyToken = ENV['HOCKEY_TOKEN']
+$appCenterToken = ENV['APP_CENTER_TOKEN']
 $slackUrl = ENV['SLACK_WEBHOOK_URL']
 $errorSlackChannel = ENV['ERROR_SLACK_CHANNEL']
 $projectSlackChannel = ENV['PROJECT_SLACK_CHANNEL']
@@ -35,8 +36,7 @@ puts "Slack URL: #{$slackUrl}"
 puts "Error Channel: #{$errorSlackChannel}"
 puts "Project Slack Channel: #{$projectSlackChannel}"
 puts "Json: #{$hockeyJsonBuilds}"
-
-
+puts "App Center Token: #{$appCenterToken}"
 
 def initBuilds(builds)
   builds.each do |build|
@@ -70,8 +70,8 @@ end
 
 $version = "1.0"
 
-if $hockeyToken == nil || $hockeyToken.empty?
-  puts "HOCKEY_TOKEN missing in Bitrise app secrets, please add it. Stopping."
+if $appCenterToken.nil? || $appCenterToken.empty?
+  puts 'APP_CENTER_TOKEN missing in Bitrise app secrets, please add it. Stopping.'
   exit 1
 end
 
