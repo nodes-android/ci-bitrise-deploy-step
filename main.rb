@@ -53,12 +53,12 @@ end
 
 puts "Parsing build info"
 # retrieve build info json from env variable
-json = ENV['HOCKEYBUILDSJSON']
+json = ENV['APPCENTERJSON']
 buildPath = ENV['BITRISE_SOURCE_DIR']
 
 if json == nil || json.to_s.empty?
-  puts "Env var: HOCKEYBUILDSJSON was empty, trying to read from file: #{buildPath}/hockeybuilds.json"
-  json = File.read("#{buildPath}/hockeybuilds.json")
+  puts "Env var: HOCKEYBUILDSJSON was empty, trying to read from file: #{buildPath}/appcenterbuilds.json"
+  json = File.read("#{buildPath}/appcenterbuilds.json")
 end
 
 if json == nil || json.to_s.empty?
