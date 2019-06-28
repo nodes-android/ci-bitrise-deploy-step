@@ -44,30 +44,6 @@ def initBuilds(builds)
   end
 end
 
-def sanityCheckBuilds(builds)
-  builds.each do |build|
-    # skip builds with error or no hockeyinfo
-    if build['error'] || build['hockeyInfo'] == nil
-      next
-    end
-    #puts build['hockeyInfo'].inspect.gsub(",", "\n")
-    #puts build['latestHockeyVersion'].inspect.gsub(",", "\n")
-
-    if(build['hockeyInfo']['visibility'] == "private")
-      $url = "https://rink.hockeyapp.net/manage/apps/#{build['hockeyInfo']['id']}/settings?type=distribution"
-      reportError("Could not post build " + build['hockeyInfo']['title'] + ", go to <" + $url + "| Distribution Settings> and set download page to Public")
-      build['error'] = true
-      next
-    end
-
-    if(build['appId'] != build['hockeyInfo']['bundle_identifier'])
-      reportError("appId #{build['appId']} from build.gradle is not the same as the hockey bundle identifier #{build['hockeyInfo']['bundle_identifier']}")
-      build['error'] = true
-      next
-    end
-  end
-end
-
 $version = "1.0"
 
 if $appCenterToken == nil || $appCenterToken.empty?
@@ -84,15 +60,19 @@ if json == nil || json.to_s.empty?
   puts "Env var: HOCKEYBUILDSJSON was empty, trying to read from file: #{buildPath}/hockeybuilds.json"
   json = File.read("#{buildPath}/hockeybuilds.json")
 end
+
 if json == nil || json.to_s.empty?
   reportError("Build info could not be parsed from json (empty)")
   exit 1
 end
-if(!validJson?(json))
+
+unless validJson?(json)
   reportError("Build info could not be parsed from json (json not valid)")
   exit 1
 end
+
 builds = JSON.parse(json)
+
 if builds == nil
   reportError("Build info could not be parsed from json (parse failed)")
   exit 1
@@ -100,8 +80,26 @@ end
 
 puts "[34;1mBuild info (size: #{builds.length}):[0m #{json}"
 
+initBuilds builds
 
-builds.each(&method(:getLatestBuildReleaseId))
+builds.each do |build|
+
+  puts "Generating build number"
+  build['nextReleaseId'] = generate_next_build_number build
+
+  puts "Generating build upload url"
+  get_upload_url build
+
+  puts "Uploading build to AppCenter"
+  upload_to_appcenter build
+
+  puts "Commiting uploaded build"
+  commit_upload build
+
+  puts "Distributing build"
+  distribute build
+
+end
 
 
 
