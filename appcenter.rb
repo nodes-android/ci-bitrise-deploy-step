@@ -21,10 +21,10 @@ def generate_next_build_number(build)
 
   data = JSON.parse(result)
 
-  puts "Json data from build releases #{data}"
+  puts "Json data generate_next_build_number #{data}"
 
   if data.empty? #verify if array is empty
-    release_id = 1
+    release_id = 0
   else
     release_id = data[0]['id'].to_i
   end
@@ -52,7 +52,7 @@ def get_upload_url(build)
 
   data = JSON.parse(result)
 
-  puts "Json data from build releases #{data}"
+  puts "Json data get_upload_url #{data}"
 
   build['upload_url'] = data['upload_url']
   build['upload_id'] = data['upload_id']
@@ -67,9 +67,11 @@ def upload_to_appcenter(build)
 			           -H "X-API-Token: ' + $appCenterToken + '" \
 			           -o /dev/null -w "%{http_code}" ' + url
 
-  puts "Uploading #{build['build']}"
+  puts "Uploading #{build['appName']}: #{build['build']}"
 
   `#{curl}`
+
+  puts "Upload complete #{build['appName']}: #{build['build']}"
 
 end
 
