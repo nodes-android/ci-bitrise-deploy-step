@@ -23,7 +23,11 @@ def generate_next_build_number(build)
 
   puts "Json data from build releases #{data}"
 
-  release_id = data[0]['id'].to_i
+  if data.empty? #verify if array is empty
+    release_id = 1
+  else
+    release_id = data[0]['id'].to_i
+  end
 
   unless release_id.is_a? Integer
     nil
@@ -93,7 +97,6 @@ end
 # end
 
 
-
 def commit_upload(build)
 
   url = "https://api.appcenter.ms/v0.1/apps/#{build['ownerName']}/#{build['appName']}/release_uploads" + build['upload_id']
@@ -124,7 +127,7 @@ def distribute(build)
   request["Accept"] = "application/json"
   request["X-Api-Token"] = $appCenterToken
   request.body = JSON.dump({
-                               :destination_name => "All-Users-of-" + build['appName'] ,
+                               :destination_name => "All-Users-of-" + build['appName'],
                                :release_notes => "Example new release via the APIs"
                            })
 
