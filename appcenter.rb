@@ -129,6 +129,11 @@ def distribute(build)
 
   data = JSON.parse(response.body)
 
+  if data.key?("message")
+    build['error'] = true
+    reportErrorSlack(data['message'])
+  end
+
   puts "Json data from build releases #{data}"
 
 end
