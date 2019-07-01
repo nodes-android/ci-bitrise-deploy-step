@@ -8,9 +8,9 @@ def getCommitterMail()
 	return result.strip()
 end
 
-def getCommitComment()
+def getCommitComment
 	result = `git log -1 --pretty=%B`
-	return result.strip()
+	result.strip
 end
 
 # Git has no knowledge of a project name, this basically just prunes the URL

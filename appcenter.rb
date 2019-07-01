@@ -75,30 +75,6 @@ def upload_to_appcenter(build)
 
 end
 
-# def uploadAppCenterBuild(build)
-#   url = "https://api.appcenter.ms/v0.1/apps/#{build['ownerName']}/#{build['appName']}/release_uploads"
-#   curl = 'curl -sS \
-# 			           -H "X-API-Token: ' + $appCenterToken + '" ' + url
-#   result = `#{curl}`
-#
-#   unless validJson?(result)
-#     return nil
-#   end
-#
-#   data = JSON.parse(result)
-#
-#   if data['status']
-#     if data['status'] == "success"
-#       return data['app']
-#     else
-#       puts "getAppInfoHockey error: ${data['message']}"
-#     end
-#   end
-#
-#   nil
-# end
-
-
 def commit_upload(build)
 
   url = "https://api.appcenter.ms/v0.1/apps/#{build['ownerName']}/#{build['appName']}/release_uploads/" + build['upload_id']
@@ -123,14 +99,20 @@ end
 
 def distribute(build)
 
-  uri = URI.parse("https://api.appcenter.ms/v0.1/apps/#{build['ownerName']}/#{build['appName']}/releases/#{build['nextReleaseNumber']}")
+  destination_group = "All-Users-of-" + build['appName']
+  puts "Destination group: " + destination_group
+
+  url = "https://api.appcenter.ms/v0.1/apps/#{build['ownerName']}/#{build['appName']}/releases/#{build['nextReleaseNumber']}"
+  puts "Url: " + url
+
+  uri = URI.parse(url)
   request = Net::HTTP::Patch.new(uri)
   request.content_type = "application/json"
   request["Accept"] = "application/json"
   request["X-Api-Token"] = $appCenterToken
   request.body = JSON.dump({
-                               :destination_name => "All-Users-of-" + build['appName'],
-                               :release_notes => "Example new release via the APIs"
+                               :destination_name => destination_group,
+                               :release_notes => getCommitComment
                            })
 
   req_options = {
