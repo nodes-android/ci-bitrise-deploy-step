@@ -58,19 +58,29 @@ initBuilds builds
 
 builds.each do |build|
 
-  puts build['appName'] + "Generating build number"
+  puts "+------------------------------------------------------------------------------+"
+  puts build['appName'] + ": Generating build number"
+  puts "+------------------------------------------------------------------------------+"
   build['nextReleaseId'] = generate_next_build_number build
 
-  puts build['appName'] + "Generating build upload url"
+  puts "+------------------------------------------------------------------------------+"
+  puts build['appName'] + ": Generating build upload url"
+  puts "+------------------------------------------------------------------------------+"
   get_upload_url build
 
-  puts build['appName'] + "Uploading build to AppCenter"
+  puts "+------------------------------------------------------------------------------+"
+  puts build['appName'] + ": Uploading build to AppCenter"
+  puts "+------------------------------------------------------------------------------+"
   upload_to_appcenter build
 
-  puts build['appName'] + "Commiting uploaded build"
+  puts "+------------------------------------------------------------------------------+"
+  puts build['appName'] + ": Commiting uploaded build"
+  puts "+------------------------------------------------------------------------------+"
   commit_upload build
 
-  puts build['appName'] + "Distributing build"
+  puts "+------------------------------------------------------------------------------+"
+  puts build['appName'] + ": Distributing build"
+  puts "+------------------------------------------------------------------------------+"
   distribute build
 
 end

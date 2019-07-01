@@ -101,7 +101,7 @@ end
 
 def commit_upload(build)
 
-  url = "https://api.appcenter.ms/v0.1/apps/#{build['ownerName']}/#{build['appName']}/release_uploads" + build['upload_id']
+  url = "https://api.appcenter.ms/v0.1/apps/#{build['ownerName']}/#{build['appName']}/release_uploads/" + build['upload_id']
 
   curl = 'curl -X PATCH --header "Content-Type: application/json" \
               --header "Accept: application/json" \
@@ -117,7 +117,7 @@ def commit_upload(build)
 
   data = JSON.parse(result)
 
-  puts "Response from release commit: #{data}"
+  puts "Json data commit_upload #{data}"
 
 end
 
