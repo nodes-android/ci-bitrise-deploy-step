@@ -11,51 +11,51 @@ def formatCodeString(code)
 end
 
 def getProjectChannelName()
-	if ENV['PROJECT_SLACK_CHANNEL'] != nil && !ENV['PROJECT_SLACK_CHANNEL'].to_s.empty?
-		return ENV['PROJECT_SLACK_CHANNEL'].to_s
-	else
-		return '#bitrise'
-	end
+  if ENV['PROJECT_SLACK_CHANNEL'] != nil && !ENV['PROJECT_SLACK_CHANNEL'].to_s.empty?
+    return ENV['PROJECT_SLACK_CHANNEL'].to_s
+  else
+    return '#bitrise'
+  end
 end
 
 def getBitriseBuildURL()
-	if ENV['BITRISE_BUILD_URL'] != nil && !ENV['BITRISE_BUILD_URL'].to_s.empty?
-		return ENV['BITRISE_BUILD_URL'].to_s
-	else
-		return 'https://www.bitrise.io/dashboard'
-	end
+  if ENV['BITRISE_BUILD_URL'] != nil && !ENV['BITRISE_BUILD_URL'].to_s.empty?
+    return ENV['BITRISE_BUILD_URL'].to_s
+  else
+    return 'https://www.bitrise.io/dashboard'
+  end
 end
 
 def getBitriseTag()
-	if ENV['BITRISE_GIT_TAG'] != nil && !ENV['BITRISE_GIT_TAG'].to_s.empty?
-		return ENV['BITRISE_GIT_TAG'].to_s
-	else
-		return '(No tag found)'
-	end
+  if ENV['BITRISE_GIT_TAG'] != nil && !ENV['BITRISE_GIT_TAG'].to_s.empty?
+    return ENV['BITRISE_GIT_TAG'].to_s
+  else
+    return '(No tag found)'
+  end
 end
 
 def getBitriseTimestamp()
-	if ENV['BITRISE_BUILD_TRIGGER_TIMESTAMP'] != nil && !ENV['BITRISE_BUILD_TRIGGER_TIMESTAMP'].to_s.empty?
-		return ENV['BITRISE_BUILD_TRIGGER_TIMESTAMP'].to_s
-	else
-		return '(No time found)'
-	end
+  if ENV['BITRISE_BUILD_TRIGGER_TIMESTAMP'] != nil && !ENV['BITRISE_BUILD_TRIGGER_TIMESTAMP'].to_s.empty?
+    return ENV['BITRISE_BUILD_TRIGGER_TIMESTAMP'].to_s
+  else
+    return '(No time found)'
+  end
 end
 
 def getBitriseBranch()
-	if ENV['BITRISE_GIT_BRANCH'] != nil && !ENV['BITRISE_GIT_BRANCH'].to_s.empty?
-		return ENV['BITRISE_GIT_BRANCH'].to_s
-	else
-		return '(unknown branch)'
-	end
+  if ENV['BITRISE_GIT_BRANCH'] != nil && !ENV['BITRISE_GIT_BRANCH'].to_s.empty?
+    return ENV['BITRISE_GIT_BRANCH'].to_s
+  else
+    return '(unknown branch)'
+  end
 end
 
 def getErrorChannelName()
-	if ENV['ERROR_SLACK_CHANNEL'] != nil && !ENV['ERROR_SLACK_CHANNEL'].to_s.empty?
-		return ENV['ERROR_SLACK_CHANNEL'].to_s
-	else
-		return '#bitrise'
-	end
+  if ENV['ERROR_SLACK_CHANNEL'] != nil && !ENV['ERROR_SLACK_CHANNEL'].to_s.empty?
+    return ENV['ERROR_SLACK_CHANNEL'].to_s
+  else
+    return '#bitrise'
+  end
 end
 
 def postMsg(channel, msg)
@@ -78,63 +78,54 @@ def shouldAbortBuildsPostEntirely(builds)
 end
 
 def postBuildsSlack(builds)
-  comment = getCommitComment()
-  text = ""
-  if (comment.length > 0)
-    text = formatCodeString(comment)
-  end
 
   attachments = []
+
   # Bitrise attachment
   attachments.push({
-            "fallback" => "Tag *#{getBitriseTag()}* triggered on *#{getBitriseBranch()}*, started *#{getBitriseTimestamp()}* by #{getCommitterName} (#{getCommitterMail}).",
-            "title" => "Bitrise status",
-			      "text" => "Tag *#{getBitriseTag()}* triggered on *#{getBitriseBranch()}*, started *#{getBitriseTimestamp()}* by #{getCommitterName} (#{getCommitterMail}).",
-            "mrkdwn_in" => ["footer", "text"],
-            "actions" => [
-              {
-                "type" => "button",
-                "text" => "Build log",
-                "url" => getBitriseBuildURL(),
-                "style" => "primary"
-              }
-            ]
-        })
+                       :fallback => "Tag *#{getBitriseTag}* triggered on *#{getBitriseBranch}*, started *#{getBitriseTimestamp}* by #{getCommitterName} (#{getCommitterMail}).",
+                       :title => "Bitrise status",
+                       :text => "Tag *#{getBitriseTag}* triggered on *#{getBitriseBranch}*, started *#{getBitriseTimestamp}* by #{getCommitterName} (#{getCommitterMail}).",
+                       :mrkdwn_in => ["footer", "text"],
+                       :actions => [{
+                                        :type => "button",
+                                        :text => "Build log",
+                                        :url => getBitriseBuildURL,
+                                        :style => "primary"
+                                    }]
+                   })
 
   builds.each do |build|
+
     if build['error']
       parts = build['build'].split("/")
       apk = parts[-1]
       attachments.push({
-            "fallback" => "Apk #{apk} (Hockey id: #{build['hockeyId']}) could not be deployed due to errors",
-            "color" => "#F50057",
-            "title" => "Apk #{apk} (Hockey id: #{build['hockeyId']}) could not be deployed due to errors",
-			      "actions" => [
-              {
-                "type" => "button",
-                "text" => "Hockey page",
-                "url" => "https://rink.hockeyapp.net/manage/apps/#{build['hockeyId']}",
-                "style" => "danger"
-              }
-            ]
-        })
-      next
-    end
-    if (build['latestHockeyVersion'] && !build['error'])
+                           :fallback => "#{build['appName']} Apk (#{apk}) could not be deployed due to errors",
+                           :color => "#F50057",
+                           :title => "#{build['appName']} Apk (#{apk}) could not be deployed due to errors",
+                           :actions => [{
+                                            :type => "button",
+                                            :text => "AppCenter page",
+                                            :url => "https://appcenter.ms/orgs/#{build['ownerName']}/apps/#{build['appName']}",
+                                            :style => "danger"
+                                        }]
+                       })
+    else
+
       attachments.push({
-            "fallback" => "#{build['latestHockeyVersion']['title']} v#{build['latestHockeyVersion']['shortversion']} (#{build['latestHockeyVersion']['version']})",
-            "color" => $slackBuildColor,
-            "title" => "#{build['latestHockeyVersion']['title']} v#{build['latestHockeyVersion']['shortversion']} (#{build['latestHockeyVersion']['version']})",
-			      "actions" => [
-              {
-                "type" => "button",
-                "text" => "Install",
-                "url" => "#{build['latestHockeyVersion']['download_url']}",
-                "style" => "primary"
-              }
-            ]
-      })
+                           :fallback => "#{build['latestHockeyVersion']['title']} v#{build['latestHockeyVersion']['shortversion']} (#{build['latestHockeyVersion']['version']})",
+                           :color => $slackBuildColor,
+                           :title => "#{build['latestHockeyVersion']['title']} v#{build['latestHockeyVersion']['shortversion']} (#{build['latestHockeyVersion']['version']})",
+                           :actions => [{
+                                            :type => "button",
+                                            :text => "Install",
+                                            :url => "#{build['latestHockeyVersion']['download_url']}",
+                                            :style => "primary"
+                                        }]
+                       })
     end
+
   end
 
   #text += "\nNew " + type + " build (v " + version + ", branch: " + getCurrentBranchName() + ") deployed, download from <" + hockey_link + "|HockeyApp>";
@@ -149,7 +140,7 @@ def postBuildsSlack(builds)
   }
   #puts "data = #{data}"
   result = runCurlJson(data, $slackUrl)
-  #puts "result = #{result}"
+#puts "result = #{result}"
 end
 
 def reportErrorSlack(msg)

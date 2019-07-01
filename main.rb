@@ -56,6 +56,8 @@ puts "[34;1mBuild info (size: #{builds.length}):[0m #{json}"
 
 initBuilds builds
 
+postBuildsSlack builds
+
 builds.each do |build|
 
   puts "+------------------------------------------------------------------------------+"
@@ -88,6 +90,3 @@ builds.each do |build|
   puts "+------------------------------------------------------------------------------+"
 
 end
-
-postBuildsSlack builds
-
