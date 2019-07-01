@@ -1,7 +1,7 @@
-title: "Hockey CI Multi Deploy"
-summary: "Step for deploying one or more builds to hockey"
+title: "AppCenter CI Multi Deploy"
+summary: "Step for deploying one or more builds to AppCenter"
 description: |-
-  Deploys any build artifacts and uploads to Hockey. 
+  Deploys any build artifacts and uploads to AppCenter.
   Accepts a json structure with hockey id, app id and a file path to the build.
   Read more on the github page.
 website: https://github.com/nodes-android/ci-bitrise-deploy-step
