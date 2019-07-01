@@ -13,6 +13,8 @@ def generate_next_build_number(build)
 			           -H "X-API-Token: ' + $appCenterToken + '" ' + url
   result = `#{curl}`
 
+  puts "Result data:" + result
+
   unless validJson?(result)
     nil
   end
