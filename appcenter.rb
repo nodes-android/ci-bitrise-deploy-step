@@ -122,7 +122,7 @@ def distribute(build)
   request["Accept"] = "application/json"
   request["X-Api-Token"] = $appCenterToken
   request.body = JSON.dump({
-                               :destination_name => "All-Users-of-" + "Test-CI",
+                               :destination_name => "All-Users-of-" + build['appName'] ,
                                :release_notes => "Example new release via the APIs"
                            })
 
