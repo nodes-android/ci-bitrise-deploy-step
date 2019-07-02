@@ -66,56 +66,8 @@ def postMsg(channel, msg)
       :text => msg,
       :username => 'android-ci'
   }
-  runCurlJson(data, $slackUrl)
+  runCurlJson(data, $slack_url)
 end
-
-# def post_build_finished(builds)
-#
-#   has_failed_build = false
-#   failed_build_count = 0
-#
-#   builds.each do |build|
-#     if build['error']
-#       has_failed_build = true
-#       failed_build_count = failed_build_count + 1
-#     end
-#   end
-#
-#   message_color = $slack_success_color
-#
-#   if has_failed_build
-#     message_color = $slack_warning_color
-#   end
-#
-#   if failed_build_count == builds.length
-#     message_color = $slack_error_color
-#   end
-#
-#   attachments = []
-#   # Bitrise attachment
-#   attachments.push({
-#                        :fallback => "Build finished",
-#                        :title => "Bitrise status",
-#                        :text => "Build finished",
-#                        :color => message_color,
-#                        :mrkdwn_in => %w(footer text),
-#                        :actions => [{
-#                                         :type => "button",
-#                                         :text => "Build log",
-#                                         :url => getBitriseBuildURL,
-#                                         :style => "primary"
-#                                     }]
-#                    })
-#   data = {
-#       :channel => getProjectChannelName,
-#       :username => 'bitrise-ci',
-#       :mrkdwn => true,
-#       :attachments => attachments
-#   }
-#
-#   runCurlJson(data, $slackUrl)
-#
-# end
 
 def postBuildsSlack(builds)
 
@@ -138,16 +90,6 @@ def postBuildsSlack(builds)
   if failed_build_count == builds.length
     message_color = $slack_error_color
   end
-
-  puts "has_failed_build: " + has_failed_build.to_s
-  puts "failed_build_count: " + failed_build_count.to_s
-  puts "builds.length: " + builds.length.to_s
-
-  puts "builds.length: " + builds.length.to_s
-  puts "failed_build_count == builds.length: " + (failed_build_count == builds.length).to_s
-  puts "message_color: " + message_color.to_s
-  puts "$slack_warning_color: " + $slack_warning_color.to_s
-
 
   attachments = []
 
@@ -209,7 +151,7 @@ def postBuildsSlack(builds)
       :attachments => attachments
   }
 
-  runCurlJson(data, $slackUrl)
+  runCurlJson(data, $slack_url)
 
 end
 
@@ -233,7 +175,7 @@ def reportErrorSlack(msg)
       ]
   }
   #puts "data = #{data}"
-  runCurlJson(data, $slackUrl)
+  runCurlJson(data, $slack_url)
 end
 
 def reportError(msg, detail = nil)

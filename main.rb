@@ -5,19 +5,19 @@ require_relative 'git'
 
 puts 'Nodes CI Deploy'
 
-$appCenterToken = ENV['APP_CENTER_TOKEN']
-$slackUrl = ENV['SLACK_WEBHOOK_URL']
-$errorSlackChannel = ENV['ERROR_SLACK_CHANNEL']
-$projectSlackChannel = ENV['PROJECT_SLACK_CHANNEL']
-$appCenterJsonBuilds = ENV['APPCENTERJSON']
+$app_center_token = ENV['APP_CENTER_TOKEN']
+$slack_url = ENV['SLACK_WEBHOOK_URL']
+$error_slack_channel = ENV['ERROR_SLACK_CHANNEL']
+$project_slack_channel = ENV['PROJECT_SLACK_CHANNEL']
+$app_center_json_builds = ENV['APPCENTERJSON']
 
-puts "Slack URL: #{$slackUrl}"
-puts "Error Channel: #{$errorSlackChannel}"
-puts "Project Slack Channel: #{$projectSlackChannel}"
-puts "Json: #{$hockeyJsonBuilds}"
-puts "App Center Token: #{$appCenterToken}"
+puts "Slack URL: #{$slack_url}"
+puts "Error Channel: #{$error_slack_channel}"
+puts "Project Slack Channel: #{$project_slack_channel}"
+puts "Json: #{$app_center_json_builds}"
+puts "App Center Token: #{$app_center_token}"
 
-def initBuilds(builds)
+def init_builds(builds)
   builds.each do |build|
     build['error'] = false
   end
@@ -25,15 +25,15 @@ end
 
 $version = "1.0"
 
-if $appCenterToken == nil || $appCenterToken.empty?
+if $app_center_token == nil || $app_center_token.empty?
   puts "APP_CENTER_TOKEN missing in Bitrise app secrets, please add it. Stopping."
   exit 1
 end
 
 puts "Parsing build info"
 # retrieve build info json
-buildPath = ENV['BITRISE_SOURCE_DIR']
-json = File.read("#{buildPath}/appcenterbuilds.json")
+build_path = ENV['BITRISE_SOURCE_DIR']
+json = File.read("#{build_path}/appcenterbuilds.json")
 
 if json == nil || json.to_s.empty?
   reportError("Build info could not be parsed from json (empty)")
@@ -54,7 +54,7 @@ end
 
 puts "[34;1mBuild info (size: #{builds.length}):[0m #{json}"
 
-initBuilds builds
+init_builds builds
 
 builds.each do |build|
 

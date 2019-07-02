@@ -1,5 +1,4 @@
 require 'json'
-require_relative 'hockey'
 require_relative 'slack'
 require_relative 'git'
 require 'net/http'
@@ -10,7 +9,7 @@ def generate_next_build_number(build)
 
   url = "https://api.appcenter.ms/v0.1/apps/#{build['ownerName']}/#{build['appName']}/releases"
   curl = 'curl -sS \
-			           -H "X-API-Token: ' + $appCenterToken + '" ' + url
+			           -H "X-API-Token: ' + $app_center_token + '" ' + url
   result = `#{curl}`
 
   puts "Result data:" + result
@@ -43,7 +42,7 @@ end
 def get_upload_url(build)
 
   url = "https://api.appcenter.ms/v0.1/apps/#{build['ownerName']}/#{build['appName']}/release_uploads"
-  curl = 'curl -X POST --header "Content-Type: application/json" --header "Accept: application/json" --header "X-API-Token: ' + $appCenterToken + '" ' + url
+  curl = 'curl -X POST --header "Content-Type: application/json" --header "Accept: application/json" --header "X-API-Token: ' + $app_center_token + '" ' + url
   result = `#{curl}`
 
   unless validJson?(result)
@@ -64,7 +63,7 @@ def upload_to_appcenter(build)
 
   curl = 'curl -sS \
 			           -F "ipa=@' + build['build'] + '" \
-			           -H "X-API-Token: ' + $appCenterToken + '" \
+			           -H "X-API-Token: ' + $app_center_token + '" \
 			           -o /dev/null -w "%{http_code}" ' + url
 
   puts "Uploading #{build['appName']}: #{build['build']}"
@@ -81,7 +80,7 @@ def commit_upload(build)
 
   curl = 'curl -X PATCH --header "Content-Type: application/json" \
               --header "Accept: application/json" \
-              --header "X-API-Token: ' + $appCenterToken + '" \
+              --header "X-API-Token: ' + $app_center_token + '" \
               -d \'{ "status": "committed"  }\' \
               ' + url
 
@@ -109,7 +108,7 @@ def distribute(build)
   request = Net::HTTP::Patch.new(uri)
   request.content_type = "application/json"
   request["Accept"] = "application/json"
-  request["X-Api-Token"] = $appCenterToken
+  request["X-Api-Token"] = $app_center_token
   request.body = JSON.dump({
                                :destination_name => destination_group,
                                :release_notes => getCommitComment
@@ -146,7 +145,7 @@ def append_build_info(build)
   uri = URI.parse(url)
   request = Net::HTTP::Get.new(uri)
   request["Accept"] = "application/json"
-  request["X-Api-Token"] = $appCenterToken
+  request["X-Api-Token"] = $app_center_token
 
   req_options = {
       use_ssl: uri.scheme == "https",
