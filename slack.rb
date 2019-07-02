@@ -4,9 +4,9 @@ require_relative 'git'
 require_relative 'slack'
 require 'date'
 
-$slackErrorColor = "#e03131" # Red
-$slackBuildColor = "#36a64f" # Green
-$slackWarningColor = "#36a64f" # Orange
+$slack_error_color = "#e03131" # Red
+$slack_success_color = "#36a64f" # Green
+$slack_warning_color = "#36a64f" # Orange
 
 def formatCodeString(code)
   '```' + code + '```'
@@ -32,7 +32,7 @@ def getBitriseTag
   if ENV['BITRISE_GIT_TAG'] != nil && !ENV['BITRISE_GIT_TAG'].to_s.empty?
     ENV['BITRISE_GIT_TAG'].to_s
   else
-    '(No tag found)'
+    '[No tag found]'
   end
 end
 
@@ -69,53 +69,53 @@ def postMsg(channel, msg)
   runCurlJson(data, $slackUrl)
 end
 
-def post_build_finished(builds)
-
-  has_failed_build = false
-  failed_build_count = 0
-
-  builds.each do |build|
-    if build['error']
-      has_failed_build = true
-      failed_build_count = failed_build_count + 1
-    end
-  end
-
-  message_color = $slackBuildColor
-
-  if has_failed_build
-    message_color = $slackWarningColor
-  end
-
-  if failed_build_count == builds.length
-    message_color = $slackErrorColor
-  end
-
-  attachments = []
-  # Bitrise attachment
-  attachments.push({
-                       :fallback => "Build finished",
-                       :title => "Bitrise status",
-                       :text => "Build finished",
-                       :color => message_color,
-                       :mrkdwn_in => %w(footer text),
-                       :actions => [{
-                                        :type => "button",
-                                        :text => "Build log",
-                                        :url => getBitriseBuildURL,
-                                        :style => "primary"
-                                    }]
-                   })
-  data = {
-      :channel => getProjectChannelName,
-      :username => 'bitrise-ci',
-      :mrkdwn => true,
-      :attachments => attachments
-  }
-
-  runCurlJson(data, $slackUrl)
-
-end
+# def post_build_finished(builds)
+#
+#   has_failed_build = false
+#   failed_build_count = 0
+#
+#   builds.each do |build|
+#     if build['error']
+#       has_failed_build = true
+#       failed_build_count = failed_build_count + 1
+#     end
+#   end
+#
+#   message_color = $slack_success_color
+#
+#   if has_failed_build
+#     message_color = $slack_warning_color
+#   end
+#
+#   if failed_build_count == builds.length
+#     message_color = $slack_error_color
+#   end
+#
+#   attachments = []
+#   # Bitrise attachment
+#   attachments.push({
+#                        :fallback => "Build finished",
+#                        :title => "Bitrise status",
+#                        :text => "Build finished",
+#                        :color => message_color,
+#                        :mrkdwn_in => %w(footer text),
+#                        :actions => [{
+#                                         :type => "button",
+#                                         :text => "Build log",
+#                                         :url => getBitriseBuildURL,
+#                                         :style => "primary"
+#                                     }]
+#                    })
+#   data = {
+#       :channel => getProjectChannelName,
+#       :username => 'bitrise-ci',
+#       :mrkdwn => true,
+#       :attachments => attachments
+#   }
+#
+#   runCurlJson(data, $slackUrl)
+#
+# end
 
 def postBuildsSlack(builds)
 
@@ -129,15 +129,25 @@ def postBuildsSlack(builds)
     end
   end
 
-  message_color = $slackBuildColor
+  message_color = $slack_success_color
 
   if has_failed_build
-    message_color = $slackWarningColor
+    message_color = $slack_warning_color
   end
 
   if failed_build_count == builds.length
-    message_color = $slackErrorColor
+    message_color = $slack_error_color
   end
+
+  puts "has_failed_build: " + has_failed_build.to_s
+  puts "failed_build_count: " + failed_build_count.to_s
+  puts "builds.length: " + builds.length.to_s
+
+  puts "builds.length: " + builds.length.to_s
+  puts "failed_build_count == builds.length: " + (failed_build_count == builds.length).to_s
+  puts "message_color: " + message_color.to_s
+  puts "$slack_warning_color: " + $slack_warning_color.to_s
+  
 
   attachments = []
 
@@ -167,7 +177,7 @@ def postBuildsSlack(builds)
               :title => "Error deploying #{getProjectName} [branch: #{getBitriseBranch}]",
               :title_link => getGithubPageUrl,
               :text => build['errorMessage'],
-              :color => $slackErrorColor,
+              :color => $slack_error_color,
               :mrkdwn_in => ["text"]
           }
       )
@@ -176,9 +186,9 @@ def postBuildsSlack(builds)
 
       attachments.push(
           {
-              :fallback => "#{build['build_info']['app_display_name']} v#{build['build_info']['shortversion']} (#{build['build_info']['version']})",
-              :color => $slackBuildColor,
-              :title => "#{build['build_info']['app_display_name']} v#{build['build_info']['shortversion']} (#{build['build_info']['version']})",
+              :fallback => "#{build['build_info']['app_display_name']} v#{build['build_info']['short_version']} [#{build['build_info']['version']}]",
+              :color => $slack_success_color,
+              :title => "#{build['build_info']['app_display_name']} v#{build['build_info']['short_version']} [#{build['build_info']['version']}]",
               :actions => [
                   {
                       :type => "button",
@@ -216,7 +226,7 @@ def reportErrorSlack(msg)
               :title => title,
               :title_link => getGithubPageUrl,
               :text => msg,
-              :color => $slackErrorColor,
+              :color => $slack_error_color,
               :footer => "Bitrise CI " + $version + ", report bugs and feature requests on the <https://trello.com/b/7Blqe5gH/bitrise-ci|Trello board>",
               :mrkdwn_in => ["text"]
           }
