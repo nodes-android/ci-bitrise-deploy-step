@@ -8,9 +8,9 @@ def getCommitterMail()
 	return result.strip()
 end
 
-def getCommitComment
+def getCommitComment()
 	result = `git log -1 --pretty=%B`
-	result.strip
+	return result.strip()
 end
 
 # Git has no knowledge of a project name, this basically just prunes the URL
@@ -32,8 +32,8 @@ def getGithubPageUrl()
 	return url
 end
 
-def getCurrentBranchName
-	gitcommit = ENV['GIT_CLONE_COMMIT_HASH']
-	result = `git rev-parse --abbrev-ref $#{gitcommit}`
-	result.strip
+def getCurrentBranchName()
+	gitcommit = ENV['GIT_CLONE_COMMIT_HASH'];
+	result = `git rev-parse --abbrev-ref ${gitcommit}`
+	return result.strip()
 end

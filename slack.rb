@@ -125,21 +125,23 @@ def postBuildsSlack(builds)
 end
 
 def reportErrorSlack(msg)
-  title = "Error deploying " + getProjectName + " (branch: " + getCurrentBranchName + ")"
+  title = "Error deploying #{getProjectName} [branch: #{getBitriseBranch}]"
   puts "title = #{title}"
   data = {
       :channel => getErrorChannelName,
       :username => 'bitrise-ci',
       :mrkdwn => true,
-      :attachments => [{
-                           :fallback => msg,
-                           :title => title,
-                           :title_link => getGithubPageUrl,
-                           :text => msg,
-                           :color => $slackErrorColor,
-                           :footer => "Bitrise CI " + $version + ", report bugs and feature requests on the <https://trello.com/b/7Blqe5gH/bitrise-ci|Trello board>",
-                           :mrkdwn_in => ["text"]
-                       }]
+      :attachments => [
+          {
+              :fallback => msg,
+              :title => title,
+              :title_link => getGithubPageUrl,
+              :text => msg,
+              :color => $slackErrorColor,
+              :footer => "Bitrise CI " + $version + ", report bugs and feature requests on the <https://trello.com/b/7Blqe5gH/bitrise-ci|Trello board>",
+              :mrkdwn_in => ["text"]
+          }
+      ]
   }
   #puts "data = #{data}"
   runCurlJson(data, $slackUrl)
