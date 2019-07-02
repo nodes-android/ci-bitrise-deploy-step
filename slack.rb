@@ -7,74 +7,64 @@ $slackErrorColor = "#e03131"
 $slackBuildColor = "#36a64f"
 
 def formatCodeString(code)
-  return '```' + code + '```'
+  '```' + code + '```'
 end
 
-def getProjectChannelName()
+def getProjectChannelName
   if ENV['PROJECT_SLACK_CHANNEL'] != nil && !ENV['PROJECT_SLACK_CHANNEL'].to_s.empty?
-    return ENV['PROJECT_SLACK_CHANNEL'].to_s
+    ENV['PROJECT_SLACK_CHANNEL'].to_s
   else
-    return '#bitrise'
+    '#bitrise'
   end
 end
 
-def getBitriseBuildURL()
+def getBitriseBuildURL
   if ENV['BITRISE_BUILD_URL'] != nil && !ENV['BITRISE_BUILD_URL'].to_s.empty?
-    return ENV['BITRISE_BUILD_URL'].to_s
+    ENV['BITRISE_BUILD_URL'].to_s
   else
-    return 'https://www.bitrise.io/dashboard'
+    'https://www.bitrise.io/dashboard'
   end
 end
 
-def getBitriseTag()
+def getBitriseTag
   if ENV['BITRISE_GIT_TAG'] != nil && !ENV['BITRISE_GIT_TAG'].to_s.empty?
-    return ENV['BITRISE_GIT_TAG'].to_s
+    ENV['BITRISE_GIT_TAG'].to_s
   else
-    return '(No tag found)'
+    '(No tag found)'
   end
 end
 
-def getBitriseTimestamp()
+def getBitriseTimestamp
   if ENV['BITRISE_BUILD_TRIGGER_TIMESTAMP'] != nil && !ENV['BITRISE_BUILD_TRIGGER_TIMESTAMP'].to_s.empty?
-    return ENV['BITRISE_BUILD_TRIGGER_TIMESTAMP'].to_s
+    ENV['BITRISE_BUILD_TRIGGER_TIMESTAMP'].to_s
   else
-    return '(No time found)'
+    '(No time found)'
   end
 end
 
-def getBitriseBranch()
+def getBitriseBranch
   if ENV['BITRISE_GIT_BRANCH'] != nil && !ENV['BITRISE_GIT_BRANCH'].to_s.empty?
-    return ENV['BITRISE_GIT_BRANCH'].to_s
+    ENV['BITRISE_GIT_BRANCH'].to_s
   else
-    return '(unknown branch)'
+    '(unknown branch)'
   end
 end
 
-def getErrorChannelName()
+def getErrorChannelName
   if ENV['ERROR_SLACK_CHANNEL'] != nil && !ENV['ERROR_SLACK_CHANNEL'].to_s.empty?
-    return ENV['ERROR_SLACK_CHANNEL'].to_s
+    ENV['ERROR_SLACK_CHANNEL'].to_s
   else
-    return '#bitrise'
+    '#bitrise'
   end
 end
 
 def postMsg(channel, msg)
   data = {
-      "channel" => channel,
-      "text" => msg,
-      "username" => 'android-ci'
+      :channel => channel,
+      :text => msg,
+      :username => 'android-ci'
   }
   runCurlJson(data, $slackUrl)
-end
-
-# do checking to determine if we should even attempt to post the builds
-def shouldAbortBuildsPostEntirely(builds)
-  builds.each do |build|
-    if (build['latestHockeyVersion'] && !build['error'])
-      return false
-    end
-  end
-  return true
 end
 
 def postBuildsSlack(builds)
@@ -86,7 +76,7 @@ def postBuildsSlack(builds)
                        :fallback => "Tag *#{getBitriseTag}* triggered on *#{getBitriseBranch}*, started *#{getBitriseTimestamp}* by #{getCommitterName} (#{getCommitterMail}).",
                        :title => "Bitrise status",
                        :text => "Tag *#{getBitriseTag}* triggered on *#{getBitriseBranch}*, started *#{getBitriseTimestamp}* by #{getCommitterName} (#{getCommitterMail}).",
-                       :mrkdwn_in => ["footer", "text"],
+                       :mrkdwn_in => %w(footer text),
                        :actions => [{
                                         :type => "button",
                                         :text => "Build log",
@@ -100,81 +90,73 @@ def postBuildsSlack(builds)
     if build['error']
       parts = build['build'].split("/")
       apk = parts[-1]
-      attachments.push({
-                           :fallback => "#{build['appName']} Apk (#{apk}) could not be deployed due to errors",
-                           :color => "#F50057",
-                           :title => "#{build['appName']} Apk (#{apk}) could not be deployed due to errors",
-                           :actions => [{
-                                            :type => "button",
-                                            :text => "AppCenter page",
-                                            :url => "https://appcenter.ms/orgs/#{build['ownerName']}/apps/#{build['appName']}",
-                                            :style => "danger"
-                                        }]
-                       })
+      attachments.push(
+          {
+              :fallback => "#{build['appName']} Apk (#{apk}) could not be deployed due to errors",
+              :color => "#F50057",
+              :title => "#{build['appName']} Apk (#{apk}) could not be deployed due to errors",
+              :actions => [{
+                               :type => "button",
+                               :text => "AppCenter page",
+                               :url => "https://appcenter.ms/orgs/#{build['ownerName']}/apps/#{build['appName']}",
+                               :style => "danger"
+                           }]
+          }
+      )
     else
 
-      attachments.push({
-                           :fallback => "#{build['latestHockeyVersion']['title']} v#{build['latestHockeyVersion']['shortversion']} (#{build['latestHockeyVersion']['version']})",
-                           :color => $slackBuildColor,
-                           :title => "#{build['latestHockeyVersion']['title']} v#{build['latestHockeyVersion']['shortversion']} (#{build['latestHockeyVersion']['version']})",
-                           :actions => [{
-                                            :type => "button",
-                                            :text => "Install",
-                                            :url => "#{build['latestHockeyVersion']['download_url']}",
-                                            :style => "primary"
-                                        }]
-                       })
+      attachments.push(
+          {
+              :fallback => "#{build['latestHockeyVersion']['title']} v#{build['latestHockeyVersion']['shortversion']} (#{build['latestHockeyVersion']['version']})",
+              :color => $slackBuildColor,
+              :title => "#{build['latestHockeyVersion']['title']} v#{build['latestHockeyVersion']['shortversion']} (#{build['latestHockeyVersion']['version']})",
+              :actions => [{
+                               :type => "button",
+                               :text => "Install",
+                               :url => "https://appcenter.ms/orgs/#{build['ownerName']}/apps/#{build['appName']}",
+                               :style => "primary"
+                           }]
+          }
+      )
     end
 
   end
 
-  #text += "\nNew " + type + " build (v " + version + ", branch: " + getCurrentBranchName() + ") deployed, download from <" + hockey_link + "|HockeyApp>";
-  title = "#{getProjectName()} (branch: #{getCurrentBranchName()}) builds deployed:"
-  fallback = "#{getCommitterName} deployed new build(s) of #{getProjectName()}"
-
-  data = {
-      "channel" => getProjectChannelName(),
-      "username" => 'bitrise-ci',
-      "mrkdwn" => true,
-      "attachments" => attachments
-  }
-  #puts "data = #{data}"
-  result = runCurlJson(data, $slackUrl)
-#puts "result = #{result}"
 end
 
 def reportErrorSlack(msg)
-  title = "Error deploying " + getProjectName() + " (branch: " + getCurrentBranchName() + ")"
+  title = "Error deploying " + getProjectName + " (branch: " + getCurrentBranchName + ")"
   puts "title = #{title}"
   data = {
-      "channel" => getErrorChannelName(),
-      "username" => 'bitrise-ci',
-      "mrkdwn" => true,
-      "attachments" => [{
-                            "fallback" => msg,
-                            "title" => title,
-                            "title_link" => getGithubPageUrl(),
-                            "text" => msg,
-                            "color" => $slackErrorColor,
-                            "footer" => "Bitrise CI " + $version + ", report bugs and feature requests on the <https://trello.com/b/7Blqe5gH/bitrise-ci|Trello board>",
-                            "mrkdwn_in" => ["text"]
-                        }]
+      :channel => getErrorChannelName,
+      :username => 'bitrise-ci',
+      :mrkdwn => true,
+      :attachments => [{
+                           :fallback => msg,
+                           :title => title,
+                           :title_link => getGithubPageUrl,
+                           :text => msg,
+                           :color => $slackErrorColor,
+                           :footer => "Bitrise CI " + $version + ", report bugs and feature requests on the <https://trello.com/b/7Blqe5gH/bitrise-ci|Trello board>",
+                           :mrkdwn_in => ["text"]
+                       }]
   }
   #puts "data = #{data}"
-  result = runCurlJson(data, $slackUrl)
+  runCurlJson(data, $slackUrl)
 end
 
 def reportError(msg, detail = nil)
 
-  if (detail)
+  if detail
     puts "Error: #{msg}\n#{detail}"
   else
     puts "Error: #{msg}"
   end
 
-  if (detail)
+  if detail
     msg += "\n#{detail}"
   end
   reportErrorSlack msg
+
 end
 

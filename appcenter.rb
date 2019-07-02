@@ -137,3 +137,34 @@ def distribute(build)
   puts "Json data from build releases #{data}"
 
 end
+
+def append_build_info(build)
+
+  url = "https://api.appcenter.ms/v0.1/apps/#{build['ownerName']}/#{build['appName']}/releases/#{build['nextReleaseNumber']}"
+  puts "Url: " + url
+
+  uri = URI.parse(url)
+  request = Net::HTTP::Patch.new(uri)
+  request.content_type = "application/json"
+  request["Accept"] = "application/json"
+  request["X-Api-Token"] = $appCenterToken
+
+  req_options = {
+      use_ssl: uri.scheme == "https",
+  }
+
+  response = Net::HTTP.start(uri.hostname, uri.port, req_options) do |http|
+    http.request(request)
+  end
+
+  unless validJson?(response.body)
+    nil
+  end
+
+  data = JSON.parse(response.body)
+
+  puts "Json data from build releases #{data}"
+
+  build['upload_info'] = data
+
+end

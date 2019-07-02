@@ -207,8 +207,7 @@ end
 
 def getLatestBuildReleaseId(build)
 
-	#url = "https://api.appcenter.ms/v0.1/apps/#{build['ownerName']}/#{build['appName']}/releases"
-	url = "https://api.appcenter.ms/v0.1/apps/Casper-Rasmussen-Organization/Roast-Staging/releases"
+	url = "https://api.appcenter.ms/v0.1/apps/#{build['ownerName']}/#{build['appName']}/releases"
 	curl = 'curl -sS \
 			           -H "X-API-Token: ' + $appCenterToken + '" ' + url
 	result = `#{curl}`

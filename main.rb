@@ -56,8 +56,6 @@ puts "[34;1mBuild info (size: #{builds.length}):[0m #{json}"
 
 initBuilds builds
 
-postBuildsSlack builds
-
 builds.each do |build|
 
   puts "+------------------------------------------------------------------------------+"
@@ -86,7 +84,14 @@ builds.each do |build|
   distribute build
 
   puts "+------------------------------------------------------------------------------+"
+  puts build['appName'] + ": Append build info"
+  puts "+------------------------------------------------------------------------------+"
+  append_build_info build
+
+  puts "+------------------------------------------------------------------------------+"
   puts build['appName'] + ": Finished"
   puts "+------------------------------------------------------------------------------+"
 
 end
+
+postBuildsSlack builds
