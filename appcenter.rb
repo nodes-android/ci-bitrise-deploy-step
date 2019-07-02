@@ -131,7 +131,7 @@ def distribute(build)
 
   if data.key?("message")
     build['error'] = true
-    reportErrorSlack(data['message'])
+    build['errorMessage'] = data['message']
   end
 
   puts "Json data from distribute #{data}"

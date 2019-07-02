@@ -117,7 +117,7 @@ def post_build_finished(builds)
 end
 
 def postBuildsSlack(builds)
-  
+
   attachments = []
   # Bitrise attachment
   attachments.push({
@@ -135,24 +135,25 @@ def postBuildsSlack(builds)
 
   builds.each do |build|
 
-    if build['error']
+    if build['errorMessage']
 
-      parts = build['build'].split("/")
-      apk = parts[-1]
-      attachments.push(
-          {
-              :fallback => "#{build['appName']} Apk (#{apk}) could not be deployed due to errors",
-              :color => "#F50057",
-              :title => "#{build['appName']} Apk (#{apk}) could not be deployed due to errors",
-              :actions => [
-                  {
-                      :type => "button",
-                      :text => "AppCenter page",
-                      :url => "https://appcenter.ms/orgs/#{build['ownerName']}/apps/#{build['appName']}",
-                      :style => "danger"
-                  }
-              ]
-          })
+      # parts = build['build'].split("/")
+      # apk = parts[-1]
+      # attachments.push(
+      #     {
+      #         :fallback => "#{build['appName']} Apk (#{apk}) could not be deployed due to errors",
+      #         :color => "#F50057",
+      #         :title => "#{build['appName']} Apk (#{apk}) could not be deployed due to errors",
+      #         :actions => [
+      #             {
+      #                 :type => "button",
+      #                 :text => "AppCenter page",
+      #                 :url => "https://appcenter.ms/orgs/#{build['ownerName']}/apps/#{build['appName']}",
+      #                 :style => "danger"
+      #             }
+      #         ]
+      #     })
+      reportErrorSlack(build['errorMessage'])
 
     else
 
