@@ -6,7 +6,7 @@ require 'date'
 
 $slack_error_color = "#e03131" # Red
 $slack_success_color = "#36a64f" # Green
-$slack_warning_color = "#36a64f" # Orange
+$slack_warning_color = "#f5af2c" # Orange
 
 def formatCodeString(code)
   '```' + code + '```'
@@ -147,7 +147,7 @@ def postBuildsSlack(builds)
   puts "failed_build_count == builds.length: " + (failed_build_count == builds.length).to_s
   puts "message_color: " + message_color.to_s
   puts "$slack_warning_color: " + $slack_warning_color.to_s
-  
+
 
   attachments = []
 
