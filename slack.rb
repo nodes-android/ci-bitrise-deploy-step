@@ -2,6 +2,7 @@ require 'json'
 require_relative 'util'
 require_relative 'git'
 require_relative 'slack'
+require 'date'
 
 $slackErrorColor = "#e03131"  # Red
 $slackBuildColor = "#36a64f"  # Green
@@ -118,11 +119,32 @@ end
 
 def postBuildsSlack(builds)
 
+  has_failed_build = false
+  failed_build_count = 0
+
+  builds.each do |build|
+    if build['error']
+      has_failed_build = true
+      failed_build_count = failed_build_count + 1
+    end
+  end
+
+  message_color = $slackBuildColor
+
+  if has_failed_build
+    message_color = $slackWarningColor
+  end
+
+  if failed_build_count == builds.length
+    message_color = $slackErrorColor
+  end
+
   attachments = []
   # Bitrise attachment
   attachments.push({
                        :fallback => "Tag *#{getBitriseTag}* triggered on *#{getBitriseBranch}*, started *#{DateTime.strptime(getBitriseTimestamp, '%Q')}* by #{getCommitterName} (#{getCommitterMail})",
                        :title => "Bitrise status",
+                       :color => message_color,
                        :text => "Tag *#{getBitriseTag}* triggered on *#{getBitriseBranch}*, started *#{DateTime.strptime(getBitriseTimestamp, '%Q')}* by #{getCommitterName} (#{getCommitterMail})",
                        :mrkdwn_in => %w(footer text),
                        :actions => [{
