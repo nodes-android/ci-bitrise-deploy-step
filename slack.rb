@@ -163,7 +163,7 @@ def postBuildsSlack(builds)
 
       attachments.push(
           {
-              :fallback => msg,
+              :fallback => build['errorMessage'],
               :title => "Error deploying #{getProjectName} [branch: #{getBitriseBranch}]",
               :title_link => getGithubPageUrl,
               :text => build['errorMessage'],
