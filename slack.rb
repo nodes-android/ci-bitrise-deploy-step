@@ -68,32 +68,6 @@ def postMsg(channel, msg)
   runCurlJson(data, $slackUrl)
 end
 
-
-def post_build_triggered
-  attachments = []
-  # Bitrise attachment
-  attachments.push({
-                       :fallback => "Tag *#{getBitriseTag}* triggered on *#{getBitriseBranch}*, started *#{DateTime.strptime(getBitriseTimestamp, '%Q')}* by #{getCommitterName} (#{getCommitterMail})",
-                       :title => "Bitrise status",
-                       :text => "Tag *#{getBitriseTag}* triggered on *#{getBitriseBranch}*, started *#{DateTime.strptime(getBitriseTimestamp, '%Q')}* by #{getCommitterName} (#{getCommitterMail})",
-                       :mrkdwn_in => %w(footer text),
-                       :actions => [{
-                                        :type => "button",
-                                        :text => "Build log",
-                                        :url => getBitriseBuildURL,
-                                        :style => "primary"
-                                    }]
-                   })
-  data = {
-      :channel => getProjectChannelName,
-      :username => 'bitrise-ci',
-      :mrkdwn => true,
-      :attachments => attachments
-  }
-
-  runCurlJson(data, $slackUrl)
-end
-
 def post_build_finished(builds)
 
   has_failed_build = false
@@ -143,8 +117,21 @@ def post_build_finished(builds)
 end
 
 def postBuildsSlack(builds)
-
+  
   attachments = []
+  # Bitrise attachment
+  attachments.push({
+                       :fallback => "Tag *#{getBitriseTag}* triggered on *#{getBitriseBranch}*, started *#{DateTime.strptime(getBitriseTimestamp, '%Q')}* by #{getCommitterName} (#{getCommitterMail})",
+                       :title => "Bitrise status",
+                       :text => "Tag *#{getBitriseTag}* triggered on *#{getBitriseBranch}*, started *#{DateTime.strptime(getBitriseTimestamp, '%Q')}* by #{getCommitterName} (#{getCommitterMail})",
+                       :mrkdwn_in => %w(footer text),
+                       :actions => [{
+                                        :type => "button",
+                                        :text => "Build log",
+                                        :url => getBitriseBuildURL,
+                                        :style => "primary"
+                                    }]
+                   })
 
   builds.each do |build|
 
