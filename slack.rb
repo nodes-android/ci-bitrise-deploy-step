@@ -4,9 +4,9 @@ require_relative 'git'
 require_relative 'slack'
 require 'date'
 
-$slackErrorColor = "#e03131"  # Red
-$slackBuildColor = "#36a64f"  # Green
-$slackWarningColor = "#36a64f"  # Orange
+$slackErrorColor = "#e03131" # Red
+$slackBuildColor = "#36a64f" # Green
+$slackWarningColor = "#36a64f" # Orange
 
 def formatCodeString(code)
   '```' + code + '```'
@@ -140,42 +140,37 @@ def postBuildsSlack(builds)
   end
 
   attachments = []
+
   # Bitrise attachment
-  attachments.push({
-                       :fallback => "Tag *#{getBitriseTag}* triggered on *#{getBitriseBranch}*, started *#{DateTime.strptime(getBitriseTimestamp, '%Q')}* by #{getCommitterName} (#{getCommitterMail})",
-                       :title => "Bitrise status",
-                       :color => message_color,
-                       :text => "Tag *#{getBitriseTag}* triggered on *#{getBitriseBranch}*, started *#{DateTime.strptime(getBitriseTimestamp, '%Q')}* by #{getCommitterName} (#{getCommitterMail})",
-                       :mrkdwn_in => %w(footer text),
-                       :actions => [{
-                                        :type => "button",
-                                        :text => "Build log",
-                                        :url => getBitriseBuildURL,
-                                        :style => "primary"
-                                    }]
-                   })
+  attachments.push(
+      {
+          :fallback => "Tag *#{getBitriseTag}* triggered on *#{getBitriseBranch}*, started *#{Time.at(getBitriseTimestamp)}* by #{getCommitterName} (#{getCommitterMail})",
+          :title => "Bitrise status",
+          :color => message_color,
+          :text => "Tag *#{getBitriseTag}* triggered on *#{getBitriseBranch}*, started *#{Time.at(getBitriseTimestamp)}* by #{getCommitterName} (#{getCommitterMail})",
+          :mrkdwn_in => %w(footer text),
+          :actions => [{
+                           :type => "button",
+                           :text => "Build log",
+                           :url => getBitriseBuildURL,
+                           :style => "primary"
+                       }]
+      })
 
   builds.each do |build|
 
     if build['errorMessage']
 
-      # parts = build['build'].split("/")
-      # apk = parts[-1]
-      # attachments.push(
-      #     {
-      #         :fallback => "#{build['appName']} Apk (#{apk}) could not be deployed due to errors",
-      #         :color => "#F50057",
-      #         :title => "#{build['appName']} Apk (#{apk}) could not be deployed due to errors",
-      #         :actions => [
-      #             {
-      #                 :type => "button",
-      #                 :text => "AppCenter page",
-      #                 :url => "https://appcenter.ms/orgs/#{build['ownerName']}/apps/#{build['appName']}",
-      #                 :style => "danger"
-      #             }
-      #         ]
-      #     })
-      reportErrorSlack(build['errorMessage'])
+      attachments.push(
+          {
+              :fallback => msg,
+              :title => "Error deploying #{getProjectName} [branch: #{getBitriseBranch}]",
+              :title_link => getGithubPageUrl,
+              :text => build['errorMessage'],
+              :color => $slackErrorColor,
+              :mrkdwn_in => ["text"]
+          }
+      )
 
     else
 
