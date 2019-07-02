@@ -126,6 +126,15 @@ def postBuildsSlack(builds)
 
   end
 
+  data = {
+      :channel => getProjectChannelName,
+      :username => 'bitrise-ci',
+      :mrkdwn => true,
+      :attachments => attachments
+  }
+  
+  runCurlJson(data, $slackUrl)
+
 end
 
 def reportErrorSlack(msg)
