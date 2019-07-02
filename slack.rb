@@ -88,6 +88,7 @@ def postBuildsSlack(builds)
   builds.each do |build|
 
     if build['error']
+
       parts = build['build'].split("/")
       apk = parts[-1]
       attachments.push(
@@ -95,29 +96,32 @@ def postBuildsSlack(builds)
               :fallback => "#{build['appName']} Apk (#{apk}) could not be deployed due to errors",
               :color => "#F50057",
               :title => "#{build['appName']} Apk (#{apk}) could not be deployed due to errors",
-              :actions => [{
-                               :type => "button",
-                               :text => "AppCenter page",
-                               :url => "https://appcenter.ms/orgs/#{build['ownerName']}/apps/#{build['appName']}",
-                               :style => "danger"
-                           }]
-          }
-      )
+              :actions => [
+                  {
+                      :type => "button",
+                      :text => "AppCenter page",
+                      :url => "https://appcenter.ms/orgs/#{build['ownerName']}/apps/#{build['appName']}",
+                      :style => "danger"
+                  }
+              ]
+          })
+
     else
 
       attachments.push(
           {
-              :fallback => "#{build['latestHockeyVersion']['title']} v#{build['latestHockeyVersion']['shortversion']} (#{build['latestHockeyVersion']['version']})",
+              :fallback => "#{build['build_info']['app_display_name']} v#{build['build_info']['shortversion']} (#{build['build_info']['version']})",
               :color => $slackBuildColor,
-              :title => "#{build['latestHockeyVersion']['title']} v#{build['latestHockeyVersion']['shortversion']} (#{build['latestHockeyVersion']['version']})",
-              :actions => [{
-                               :type => "button",
-                               :text => "Install",
-                               :url => "https://appcenter.ms/orgs/#{build['ownerName']}/apps/#{build['appName']}",
-                               :style => "primary"
-                           }]
-          }
-      )
+              :title => "#{build['build_info']['app_display_name']} v#{build['build_info']['shortversion']} (#{build['build_info']['version']})",
+              :actions => [
+                  {
+                      :type => "button",
+                      :text => "Install",
+                      :url => "https://install.appcenter.ms/orgs/#{build['ownerName']}/apps/#{build['appName']}/distribution_groups/all-users-of-#{build['appName']}",
+                      :style => "primary"
+                  }
+              ]
+          })
     end
 
   end

@@ -134,7 +134,7 @@ def distribute(build)
     reportErrorSlack(data['message'])
   end
 
-  puts "Json data from build releases #{data}"
+  puts "Json data from distribute #{data}"
 
 end
 
@@ -144,8 +144,7 @@ def append_build_info(build)
   puts "Url: " + url
 
   uri = URI.parse(url)
-  request = Net::HTTP::Patch.new(uri)
-  request.content_type = "application/json"
+  request = Net::HTTP::Get.new(uri)
   request["Accept"] = "application/json"
   request["X-Api-Token"] = $appCenterToken
 
@@ -163,8 +162,8 @@ def append_build_info(build)
 
   data = JSON.parse(response.body)
 
-  puts "Json data from build releases #{data}"
+  puts "Json data from append_build_info #{data}"
 
-  build['upload_info'] = data
+  build['build_info'] = data
 
 end
