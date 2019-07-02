@@ -144,10 +144,10 @@ def postBuildsSlack(builds)
   # Bitrise attachment
   attachments.push(
       {
-          :fallback => "Tag *#{getBitriseTag}* triggered on *#{getBitriseBranch}*, started *#{DateTime.strptime(getBitriseTimestamp,'%s')}* by #{getCommitterName} (#{getCommitterMail})",
+          :fallback => "Tag *#{getBitriseTag}* triggered on *#{getBitriseBranch}* by #{getCommitterName} (#{getCommitterMail})",
           :title => "Bitrise status",
           :color => message_color,
-          :text => "Tag *#{getBitriseTag}* triggered on *#{getBitriseBranch}*, started *#{DateTime.strptime(getBitriseTimestamp,'%s')}* by #{getCommitterName} (#{getCommitterMail})",
+          :text => "Tag *#{getBitriseTag}* triggered on *#{getBitriseBranch}* by #{getCommitterName} (#{getCommitterMail})",
           :mrkdwn_in => %w(footer text),
           :actions => [{
                            :type => "button",
