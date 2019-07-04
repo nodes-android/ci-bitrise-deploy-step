@@ -1,98 +1,50 @@
 require 'json'
-require_relative 'hockey'
+require_relative 'appcenter'
 require_relative 'slack'
 require_relative 'git'
 
 puts 'Nodes CI Deploy'
 
+$app_center_token = ENV['APP_CENTER_TOKEN']
+$slack_url = ENV['SLACK_WEBHOOK_URL']
+$error_slack_channel = ENV['ERROR_SLACK_CHANNEL']
+$project_slack_channel = ENV['PROJECT_SLACK_CHANNEL']
 
-# for testing purposes, when running bitrise run test remove the final festival (FF) at the end
-=begin
-ENV['HOCKEYBUILDSJSON'] = '[
-  {
-    "build": "app-firstSkin-release-unsigned.apk",
-    "hockeyId": "9aad7c10facc4f569dd6deec2e37a795",
-    "appId": "dk.nodes.citestflavors.firstskin",
-    "mappingFile": "null"
-  },
-  {
-    "build": "app-secondSkin-release-unsigned.apk",
-    "hockeyId": "0c7b2da8e5354a26b8d6d4406c387c6f",
-    "appId": "dk.nodes.citestflavors.secondskin",
-    "mappingFile": "null"
-  }
-]'
-=end
+puts "Slack URL: #{$slack_url}"
+puts "Error Channel: #{$error_slack_channel}"
+puts "Project Slack Channel: #{$project_slack_channel}"
+puts "App Center Token: #{$app_center_token}"
 
-$hockeyToken = ENV['HOCKEY_TOKEN']
-$slackUrl = ENV['SLACK_WEBHOOK_URL']
-$errorSlackChannel = ENV['ERROR_SLACK_CHANNEL']
-$projectSlackChannel = ENV['PROJECT_SLACK_CHANNEL']
-$hockeyJsonBuilds = ENV['HOCKEYBUILDSJSON']
-
-puts "Hockey Token: #{$hockeyToken}"
-puts "Slack URL: #{$slackUrl}"
-puts "Error Channel: #{$errorSlackChannel}"
-puts "Project Slack Channel: #{$projectSlackChannel}"
-puts "Json: #{$hockeyJsonBuilds}"
-
-
-
-def initBuilds(builds)
+def init_builds(builds)
   builds.each do |build|
     build['error'] = false
   end
 end
 
-def sanityCheckBuilds(builds)
-  builds.each do |build|
-    # skip builds with error or no hockeyinfo
-    if build['error'] || build['hockeyInfo'] == nil
-      next
-    end
-    #puts build['hockeyInfo'].inspect.gsub(",", "\n")
-    #puts build['latestHockeyVersion'].inspect.gsub(",", "\n")
-
-    if(build['hockeyInfo']['visibility'] == "private")
-      $url = "https://rink.hockeyapp.net/manage/apps/#{build['hockeyInfo']['id']}/settings?type=distribution"
-      reportError("Could not post build " + build['hockeyInfo']['title'] + ", go to <" + $url + "| Distribution Settings> and set download page to Public")
-      build['error'] = true
-      next
-    end
-
-    if(build['appId'] != build['hockeyInfo']['bundle_identifier'])
-      reportError("appId #{build['appId']} from build.gradle is not the same as the hockey bundle identifier #{build['hockeyInfo']['bundle_identifier']}")
-      build['error'] = true
-      next
-    end
-  end
-end
-
 $version = "1.0"
 
-if $hockeyToken == nil || $hockeyToken.empty?
-  puts "HOCKEY_TOKEN missing in Bitrise app secrets, please add it. Stopping."
+if $app_center_token == nil || $app_center_token.empty?
+  puts "APP_CENTER_TOKEN missing in Bitrise app secrets, please add it. Stopping."
   exit 1
 end
 
 puts "Parsing build info"
-# retrieve build info json from env variable
-json = ENV['HOCKEYBUILDSJSON']
-buildPath = ENV['BITRISE_SOURCE_DIR']
+# retrieve build info json
+build_path = ENV['BITRISE_SOURCE_DIR']
+json = File.read("#{build_path}/appcenterbuilds.json")
 
-if json == nil || json.to_s.empty?
-  puts "Env var: HOCKEYBUILDSJSON was empty, trying to read from file: #{buildPath}/hockeybuilds.json"
-  json = File.read("#{buildPath}/hockeybuilds.json")
-end
 if json == nil || json.to_s.empty?
   reportError("Build info could not be parsed from json (empty)")
   exit 1
 end
-if(!validJson?(json))
+
+unless validJson?(json)
   reportError("Build info could not be parsed from json (json not valid)")
   exit 1
 end
+
 builds = JSON.parse(json)
+
 if builds == nil
   reportError("Build info could not be parsed from json (parse failed)")
   exit 1
@@ -100,30 +52,44 @@ end
 
 puts "[34;1mBuild info (size: #{builds.length}):[0m #{json}"
 
-initBuilds builds
+init_builds builds
 
-puts "Downloading info about latest app versions from hockeyapp..."
-# lookup each build on hockey and add info it build exists
-addInfoToBuildsHockey builds
-#puts builds.inspect.gsub(",", "\n")
-sanityCheckBuilds(builds)
+builds.each do |build|
 
+  puts "+------------------------------------------------------------------------------+"
+  puts build['appName'] + ": Generating build number"
+  puts "+------------------------------------------------------------------------------+"
+  build['nextReleaseId'] = generate_next_build_number build
 
-puts "Uploading builds to hockeyapp..."
-#puts builds.inspect.gsub(",", "\n")
-uploadBuildsHockey(builds)
+  puts "+------------------------------------------------------------------------------+"
+  puts build['appName'] + ": Generating build upload url"
+  puts "+------------------------------------------------------------------------------+"
+  get_upload_url build
 
-puts "Downloading info about latest app versions from hockeyapp..."
-# get hockey info about the just uploaded builds
-addInfoToBuildsHockey builds
+  puts "+------------------------------------------------------------------------------+"
+  puts build['appName'] + ": Uploading build to App Center"
+  puts "+------------------------------------------------------------------------------+"
+  upload_to_appcenter build
 
-puts "Posting builds to slack"
-#if shouldAbortBuildsPostEntirely(builds)
-#	reportError("No builds to post due to previous errors")
-#	exit(1)
-#end
+  puts "+------------------------------------------------------------------------------+"
+  puts build['appName'] + ": Commiting uploaded build"
+  puts "+------------------------------------------------------------------------------+"
+  commit_upload build
+
+  puts "+------------------------------------------------------------------------------+"
+  puts build['appName'] + ": Distributing build"
+  puts "+------------------------------------------------------------------------------+"
+  distribute build
+
+  puts "+------------------------------------------------------------------------------+"
+  puts build['appName'] + ": Append build info"
+  puts "+------------------------------------------------------------------------------+"
+  append_build_info build
+
+  puts "+------------------------------------------------------------------------------+"
+  puts build['appName'] + ": Finished"
+  puts "+------------------------------------------------------------------------------+"
+
+end
+
 postBuildsSlack builds
-
-
-#reportError("Error", "Av for helvede")
-
