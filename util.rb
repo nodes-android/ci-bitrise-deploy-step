@@ -9,13 +9,13 @@ def runCurlJson(data, url)
 end
 
 def wasCurlOk(result)
-	if !result.is_a? String 
+	unless result.is_a? String
 		return false
 	end
 	if result[0, 2] == "20"
-		return true
+		true
 	else
-		return false
+		false
 	end
 end
 

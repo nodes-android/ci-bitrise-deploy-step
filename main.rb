@@ -9,12 +9,10 @@ $app_center_token = ENV['APP_CENTER_TOKEN']
 $slack_url = ENV['SLACK_WEBHOOK_URL']
 $error_slack_channel = ENV['ERROR_SLACK_CHANNEL']
 $project_slack_channel = ENV['PROJECT_SLACK_CHANNEL']
-$app_center_json_builds = ENV['APPCENTERJSON']
 
 puts "Slack URL: #{$slack_url}"
 puts "Error Channel: #{$error_slack_channel}"
 puts "Project Slack Channel: #{$project_slack_channel}"
-puts "Json: #{$app_center_json_builds}"
 puts "App Center Token: #{$app_center_token}"
 
 def init_builds(builds)
@@ -69,7 +67,7 @@ builds.each do |build|
   get_upload_url build
 
   puts "+------------------------------------------------------------------------------+"
-  puts build['appName'] + ": Uploading build to AppCenter"
+  puts build['appName'] + ": Uploading build to App Center"
   puts "+------------------------------------------------------------------------------+"
   upload_to_appcenter build
 

@@ -12,7 +12,7 @@ workflows:
   test:
     steps:
     - path::./:
-        title: AppCenter CI Deploy Test
+        title: App Center CI Deploy Test
         description: |-
           The example input has a default value,
           you can overwrite it if you want to, just like we did below,
